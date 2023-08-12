@@ -1,0 +1,12 @@
+
+# ===== Ignore builds from cocotb =====
+__pycache__/
+sim_build/
+results.xml
+dump.vcd
+
+# ===== Ignore .mem files =====
+*.mem
+
+# ===== Ignore machine code builds
+verif/gen_machine_codes/build
