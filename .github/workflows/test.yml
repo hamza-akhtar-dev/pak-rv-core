@@ -30,5 +30,5 @@ jobs:
 
     - name: Run Verification Framework
       run: |
-        echo $(pwd)
+        cd Pak-RV-Core
         make all
