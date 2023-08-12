@@ -19,7 +19,20 @@ jobs:
         echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
         curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
         sudo apt update
-        sudo apt install verilator
+        sudo apt-get install git help2man perl python3 make autoconf g++ flex bison ccache -y
+        sudo apt-get install libgoogle-perftools-dev numactl perl-doc -y
+        sudo apt-get install libfl2  -y
+        sudo apt-get install libfl-dev -y
+        sudo apt-get install zlibc zlib1g zlib1g-dev -y
+        git clone https://github.com/verilator/verilator
+        unset VERILATOR_ROOT
+        cd verilator
+        git pull
+        git checkout stable
+        autoconf
+        ./configure
+        make
+        sudo make install
         pip3 install cocotb
 
     - name: Setup toolchain
