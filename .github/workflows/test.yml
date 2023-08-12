@@ -36,9 +36,9 @@ jobs:
         
         unset VERILATOR_ROOT
         
-        git clone $(python3 ${src_path}/_tools.py --tool verilator --field git-url) verilator
+        git clone https://github.com/verilator/verilator
         cd verilator
-        git checkout $(python3 ${src_path}/_tools.py --tool verilator --field git-commit)
+        git checkout v5.012
         
         autoconf
         
