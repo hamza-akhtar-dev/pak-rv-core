@@ -1,0 +1,33 @@
+name: Pak-RV-Core
+
+on: [push, pull_request]
+
+jobs:
+
+  Pak-RV-Core-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Repository Checkout
+      uses: actions/checkout@v3
+      with:
+        path: Pak-RV-Core
+
+    - name: Install verilator and cocotb
+      run: |
+        sudo apt-get install -y python3-setuptools
+        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
+        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
+        sudo apt update
+        sudo apt install verilator
+        pip3 install cocotb
+
+    - name: Setup toolchain
+      run: |
+        wget -c https://github.com/riscv-collab/riscv-gnu-toolchain/releases/download/2023.04.29/riscv64-elf-ubuntu-20.04-nightly-2023.04.29-nightly.tar.gz
+        tar -xzf riscv64-elf-ubuntu-20.04-nightly-2023.04.29-nightly.tar.gz
+        echo $GITHUB_WORKSPACE/riscv/bin >> $GITHUB_PATH
+
+    - name: Run Verification Framework
+      run: |
+        make all
