@@ -30,4 +30,5 @@ jobs:
 
     - name: Run Verification Framework
       run: |
+        echo $(shell pwd)
         make all
