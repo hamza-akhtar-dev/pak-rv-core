@@ -2,9 +2,9 @@ module
     import alu_pkg::alu_op_t;
 (
     input  alu_op_t     op;
-    input  logic [31:0] opr_a,
-    input  logic [31:0] opr_b,
-    output logic [31:0] opr_result,
+    input  logic signed [31:0] opr_a,
+    input  logic signed [31:0] opr_b,
+    output logic signed [31:0] opr_result,
 );
 
     always_comb
@@ -19,7 +19,7 @@ module
             SRL:  opr_result = opr_a >> opr_b;
             SRA:  opr_result = opr_a >>> opr_b;
             SLT:  opr_result = (opr_a < opr_b) ? 1 : 0;
-            SLTU: opr_result = (opr_a < opr_b) ? 1 : 0;
+            SLTU: opr_result = ($unsigned(opr_a) < $unsigned(opr_b)) ? 1 : 0;
             default: opr_result = 0;
         endcase
     end
