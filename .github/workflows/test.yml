@@ -24,8 +24,8 @@ jobs:
 
     - name: Setup toolchain
       run: |
-        wget -c https://github.com/riscv-collab/riscv-gnu-toolchain/releases/download/2023.04.29/riscv64-elf-ubuntu-20.04-nightly-2023.04.29-nightly.tar.gz
-        tar -xzf riscv64-elf-ubuntu-20.04-nightly-2023.04.29-nightly.tar.gz
+        wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-4.0.0/riscv32-unknown-elf.gcc-12.1.0.tar.gz
+        tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
         echo $GITHUB_WORKSPACE/riscv/bin >> $GITHUB_PATH
 
     - name: Run Verification Framework
