@@ -10,3 +10,6 @@ dump.vcd
 
 # ===== Ignore machine code builds
 verif/gen_machine_codes/build
+
+# ===== Ignore local vscode setup files
+.vscode/
