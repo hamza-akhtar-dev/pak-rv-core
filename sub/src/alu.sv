@@ -7,10 +7,10 @@ module alu
 # (
     parameter DATA_WIDTH = 32
 ) (
-    input  alu_op_t               op,
-    input  logic [DATA_WIDTH-1:0] opr_a,
-    input  logic [DATA_WIDTH-1:0] opr_b,
-    output logic [DATA_WIDTH-1:0] opr_result
+    input  alu_op_t                      op,
+    input  logic signed [DATA_WIDTH-1:0] opr_a,
+    input  logic signed [DATA_WIDTH-1:0] opr_b,
+    output logic signed [DATA_WIDTH-1:0] opr_result
 );
     always_comb
     begin
