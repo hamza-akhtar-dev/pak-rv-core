@@ -1,7 +1,6 @@
 // Instruction Decode Stage
 
-module id_stage 
-# (
+module id_stage # (
     parameter DATA_WIDTH = 32
 ) (
     input  logic                  clk,

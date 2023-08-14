@@ -1,9 +1,8 @@
 // Parametrized Program Counter
 
-module pc 
-# (
-    PC_SIZE = 32
-) (
+module pc # (
+    parameter PC_SIZE = 32
+)(
     input  logic               clk,
     input  logic               arst_n,
     input  logic [PC_SIZE-1:0] pc_in,
