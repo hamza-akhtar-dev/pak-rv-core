@@ -1,5 +1,7 @@
 // Arithmetic Logic Unit
 
+`include "alu_pkg.svh"
+
 module alu
     import alu_pkg::alu_op_t;
 # (
