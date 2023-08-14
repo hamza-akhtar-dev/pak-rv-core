@@ -2,6 +2,7 @@
 # ===== Ignore builds from cocotb =====
 __pycache__/
 build/
+sim_build/
 results.xml
 dump.vcd
 
