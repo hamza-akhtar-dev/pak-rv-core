@@ -22,6 +22,6 @@ compile_and_simulate:
 	@cd verif && make TEST=$(TEST)
 
 clean:
-	@cd verif && make clean
+	@cd verif && make clean_all
 
 all: gen_machine_codes compile_and_simulate

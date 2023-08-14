@@ -1,4 +1,3 @@
-
 TOP_DIR      = $(shell pwd)/..
 SRC_DIR      = $(TOP_DIR)/src
 INCLUDE_DIR  = $(TOP_DIR)/include
@@ -23,6 +22,7 @@ else ifeq ($(TEST), id_stage)
     PARAMS   = -GDATA_WIDTH=32
 endif
 
+SIM_BUILD = build/build_$(TEST)
 EXTRA_ARGS      = vconfig.vlt -I$(INCLUDE_DIR) $(PARAMS) --trace --trace-structs #--debug --gdbbt
 MODULE          = pytests.test_$(TOPLEVEL)
 VERILOG_SOURCES = $(FILES)
@@ -30,4 +30,9 @@ TOPLEVEL_LANG   = verilog
 SIM             = verilator
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
+
+clean_all: clean
+	rm -f results.xml
+	rm -f -r pytests/__pycache__
+	cd gen_machine_codes && make clean
 
