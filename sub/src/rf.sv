@@ -6,6 +6,7 @@ module rf
     parameter  NUM_REGISTERS = 32,
     localparam ADDRESS_WIDTH = $clog2(NUM_REGISTERS)
 ) (
+    input  logic                     arst_n,
     input  logic                     clk,
     input  logic                     wr_en_in,
     input  logic [ADDRESS_WIDTH-1:0] rs1_in,  // source register 1 address
@@ -19,9 +20,13 @@ module rf
     logic [DATA_WIDTH-1:0] reg_file [NUM_REGISTERS-1:0];
 
     // synchronous write
-    always_ff @(posedge clk)
+    always_ff @(posedge clk, negedge arst_n)
     begin
-        if (wr_en_in)
+        if(~arst_n)
+        begin
+            reg_file <= '{default:'0};
+        end
+        else if (wr_en_in)
         begin
             reg_file[rd_in] <= rd_data_in;
         end

@@ -50,7 +50,7 @@ else:
 # seed for random number generator
 np.random.seed(cocotb.RANDOM_SEED)
 
-# model function for ALU ## TODO: move to a separate file
+# model function for PC ## TODO: move to a separate file
 def model(cycles):
     count_values = []
     for i in range(cycles):
@@ -92,13 +92,13 @@ async def test_pc(dut):
     monitor_thread = cocotb.start_soon(monitor(dut, num_cycles))
     driver_thread  = cocotb.start_soon(driver(dut, num_cycles))
     
-    # step3: wait for monitor and driver threads to finish
+    # step4: wait for monitor and driver threads to finish
     await Join(driver_thread)
     dut_result = await Join(monitor_thread)
 
-    # step4: calculate expected result
+    # step5: calculate expected result
     expected_result = model(num_cycles)
 
-    # step5: log results
+    # step6: log results
     log(num_cycles, dut_result, expected_result)
     
