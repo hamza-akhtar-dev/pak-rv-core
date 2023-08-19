@@ -23,14 +23,15 @@ module id_stage
     rf # (
         .DATA_WIDTH(DATA_WIDTH)
     ) i_rf (
-        .clk          (clk               ),
-        .rst          (arst_n            ),
-        .wr_en_in     (id_stage_in.wb_en ),
-        .rs1_in       (rs1               ),
-        .rs2_in       (rs2               ),
-        .rd_data_in   (id_stage_in.wb_rd ),
-        .rs1_data_out (id_stage_out.opr_a),
-        .rs2_data_out (id_stage_out.opr_b)
+        .clk          (clk                ),
+        .arst_n       (arst_n             ),
+        .wr_en_in     (id_stage_in.wb_en  ),
+        .rs1_in       (rs1                ),
+        .rs2_in       (rs2                ),
+        .rd_in        (id_stage_in.wb_rd  ),
+        .rd_data_in   (id_stage_in.wb_data),
+        .rs1_data_out (id_stage_out.opr_a ),
+        .rs2_data_out (id_stage_out.opr_b )
     );
 
     assign id_stage_out.opcode = id_stage_in.inst[ 6: 0];

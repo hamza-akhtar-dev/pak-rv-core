@@ -13,11 +13,11 @@
             logic [ 6:0] opcode;
             logic [ 6:0] funct7;
             logic [ 2:0] funct3;
-            logic [ 4:0] rd;
             logic [ 4:0] shamt;
+            logic [ 4:0] rd;
             logic [31:0] imm;
-            logic [ 4:0] opr_a;
-            logic [ 4:0] opr_b;
+            logic [31:0] opr_a;
+            logic [31:0] opr_b;
             // ctrl
             logic        wb_en;
             logic [ 1:0] wb_sel;
@@ -34,8 +34,9 @@
 
         function automatic aluop_t gen_aluop_f
         (
-            input logic [2:0] funct3,
-            input logic [6:0] funct7
+            input logic [6:0] opcode,
+            input logic [6:0] funct7,
+            input logic [2:0] funct3
         );
 
             aluop_t alu_op;

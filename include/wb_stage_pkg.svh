@@ -17,7 +17,7 @@
         typedef struct packed 
         {
             logic [31:0] wb_data;
-            logic [ 4:0] rd;
+            logic [ 4:0] wb_rd;
             // ctrl
             logic        wb_en;
         } wb_stage_out_t;

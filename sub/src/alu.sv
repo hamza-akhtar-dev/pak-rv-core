@@ -3,11 +3,11 @@
 `include "alu_pkg.svh"
 
 module alu
-    import alu_pkg::alu_op_t;
+    import alu_pkg::aluop_t;
 # (
     parameter DATA_WIDTH = 32
 ) (
-    input  alu_op_t                      op,
+    input  aluop_t                      op,
     input  logic signed [DATA_WIDTH-1:0] opr_a,
     input  logic signed [DATA_WIDTH-1:0] opr_b,
     output logic signed [DATA_WIDTH-1:0] opr_result

@@ -1,7 +1,13 @@
 // Write Back Stage
 
+`include "wb_stage_pkg.svh"
+
 module wb_stage 
+    import wb_stage_pkg::wb_stage_in_t;
+    import wb_stage_pkg::wb_stage_out_t;
 (
+    input  logic          clk,
+    input  logic          arst_n,
     input  wb_stage_in_t  wb_stage_in,
     output wb_stage_out_t wb_stage_out
 );
@@ -9,9 +15,12 @@ module wb_stage
     always_comb
     begin
         case(wb_stage_in.wb_sel)
-            1'b0: wb_stage_out.wb_data = wb_stage_in.opr_res;
-            1'b1: wb_stage_out.wb_data = wb_stage_in.dmem_rdata;
+            2'b00: wb_stage_out.wb_data = wb_stage_in.opr_res;
+            2'b01: wb_stage_out.wb_data = wb_stage_in.dmem_rdata;
         endcase
     end
+
+    assign wb_stage_out.wb_en = wb_stage_in.wb_en;
+    assign wb_stage_out.wb_rd = wb_stage_in.rd;
 
 endmodule: wb_stage

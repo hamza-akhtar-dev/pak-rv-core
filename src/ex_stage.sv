@@ -1,19 +1,22 @@
 // Execute Stage
 
 `include "ex_stage_pkg.svh"
+`include "alu_pkg.svh"
 
 module ex_stage
     import ex_stage_pkg::ex_stage_in_t;
     import ex_stage_pkg::ex_stage_out_t;
-    import ex_stage_pkg::aluop_t;
     import ex_stage_pkg::gen_aluop_f;
+    import alu_pkg::aluop_t;
 # (
     parameter DATA_WIDTH     = 32,
     parameter NUM_REGISTERS  = 32,
     localparam ADDRESS_WIDTH = $clog2(NUM_REGISTERS)
 ) (
-    input ex_stage_in_t  ex_stage_in,
-    input ex_stage_out_t ex_stage_out
+    input  logic          clk,
+    input  logic          arst_n,
+    input  ex_stage_in_t  ex_stage_in,
+    output ex_stage_out_t ex_stage_out
 );
 
     aluop_t alu_op;

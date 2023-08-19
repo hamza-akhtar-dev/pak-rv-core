@@ -1,39 +1,30 @@
-TOP_DIR      = $(shell pwd)/..
-SRC_DIR      = $(TOP_DIR)/src
-INCLUDE_DIR  = $(TOP_DIR)/include
-SUB_DIR      = $(TOP_DIR)/sub
-SUB_SRC_DIR  = $(SUB_DIR)/src
+TOP_DIR         = $(shell pwd)/..
+SRC_DIR         = $(TOP_DIR)/src
+INCLUDE_DIR     = $(TOP_DIR)/include
+
+SUB_DIR         = $(TOP_DIR)/sub
+SUB_SRC_DIR     = $(SUB_DIR)/src
 SUB_INCLUDE_DIR = $(SUB_DIR)/include
-PKG_DIR      = $(SUB_DIR)/include
 
-FILES       += $(SUB_SRC_DIR)/alu.sv
-FILES       += $(SUB_SRC_DIR)/pc.sv
-FILES       += $(SUB_SRC_DIR)/rf.sv
-FILES       += $(SRC_DIR)/if_stage.sv
-FILES       += $(SRC_DIR)/id_stage.sv
-FILES       += $(SRC_DIR)/imm_generator.sv
-FILES       += $(SRC_DIR)/ctrl_unit.sv
+TOPLEVEL  = core
+PARAMS    = -GDATA_WIDTH=32
+MODULE    = pytests.test_$(TOPLEVEL)
+_SRCS     = if_stage.sv id_stage.sv ex_stage.sv mem_stage.sv wb_stage.sv ctrl_unit.sv core.sv
+_SRCS_SUB = alu.sv dmem.sv pc.sv rf.sv
+SIM_BUILD       = build/build_$(TOPLEVEL)
 
-TEST         = if_stage
+# path substitution
+SRCS = $(patsubst %,$(SRC_DIR)/%,$(_SRCS))
+SRCS_SUB = $(patsubst %,$(SUB_SRC_DIR)/%,$(_SRCS_SUB))
 
-ifeq ($(TEST), if_stage)
-    TOPLEVEL = $(TEST)
-    PARAMS   = -GDATA_WIDTH=32 -GIMEM_SZ_IN_KB=1
-else ifeq ($(TEST), id_stage)
-    TOPLEVEL = $(TEST)
-    PARAMS   = -GDATA_WIDTH=32
-else ifeq ($(TEST), imm_generator)
-    TOPLEVEL = $(TEST)
-    PARAMS   = -GDATA_WIDTH=32
-else ifeq ($(TEST), ctrl_unit)
-    TOPLEVEL = $(TEST)
-    PARAMS   = -GDATA_WIDTH=32
+# debug/trace settings
+ifeq ($(DEBUG), on)
+	SETTINGS = --trace --trace-structs --debug --gdbbt
 endif
 
-SIM_BUILD = build/build_$(TEST)
-EXTRA_ARGS      = vconfig.vlt -I$(SUB_INCLUDE_DIR) $(PARAMS) --trace --trace-structs #--debug --gdbbt
-MODULE          = pytests.test_$(TOPLEVEL)
-VERILOG_SOURCES = $(FILES)
+# cocotb variables
+EXTRA_ARGS      = vconfig.vlt -I$(INCLUDE_DIR) -I$(SUB_INCLUDE_DIR) $(PARAMS) $(SETTINGS)
+VERILOG_SOURCES = $(SRCS_SUB) $(SRCS)
 TOPLEVEL_LANG   = verilog
 SIM             = verilator
 
