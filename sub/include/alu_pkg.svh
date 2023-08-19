@@ -17,7 +17,7 @@
             SRA, 
             SLT, 
             SLTU
-        } alu_op_t;
+        } aluop_t;
         
     endpackage
 
