@@ -40,10 +40,6 @@ module core
     wb_stage_in_t  wb_stage_in;
     wb_stage_out_t wb_stage_out;
 
-    // control signals
-    logic       wb_en;
-    logic [1:0] wb_sel;
-
     // stage instantiations
     if_stage # (
         .DATA_WIDTH    (DATA_WIDTH   ),
@@ -59,18 +55,9 @@ module core
     ) i_id_stage (
         .clk         (clk         ),
         .arst_n      (arst_n      ),
-        // injecting control signals into the pipeline
-        .wb_en       (wb_en       ),
-        .wb_sel      (wb_sel      ),
+        .wb_in       (wb_stage_out), // writeback interface
         .id_stage_in (id_stage_in ),
         .id_stage_out(id_stage_out)
-    );
-
-    ctrl_unit #(
-    ) i_ctrl_unit (
-        .opcode      (id_stage_in.inst[6:0]),
-        .wb_en       (wb_en                ),
-        .wb_sel      (wb_sel               )
     );
 
     ex_stage #(
@@ -108,7 +95,7 @@ module core
         end
         else 
         begin
-            id_stage_in  <= {if_stage_out, wb_stage_out.wb_en, wb_stage_out.wb_rd, wb_stage_out.wb_data};
+            id_stage_in  <= if_stage_out;
             ex_stage_in  <= id_stage_out;
             mem_stage_in <= ex_stage_out;
             wb_stage_in  <= mem_stage_out;

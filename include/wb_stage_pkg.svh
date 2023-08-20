@@ -10,16 +10,16 @@
             logic        [31:0] dmem_rdata;
             logic        [ 4:0] rd;
             // ctrl
-            logic               wb_en;
+            logic               rf_en;
             logic        [ 1:0] wb_sel;
         } wb_stage_in_t;
 
         typedef struct packed 
         {
             logic [31:0] wb_data;
-            logic [ 4:0] wb_rd;
+            logic [ 4:0] rd;
             // ctrl
-            logic        wb_en;
+            logic        rf_en;
         } wb_stage_out_t;
 
     endpackage

@@ -20,15 +20,15 @@ module mem_stage
     )  i_dmem (
         .clk           (clk                       ),
         .arst_n        (arst_n                    ),
-        .write_en      (),
-        .addr          (mem_stage_in.opr_res[12:0]),
-        .data_in       (),
+        .write_en      (mem_stage_in.dm_en        ),
+        .addr          (mem_stage_in.opr_res[9:0] ),  // TODO: make this parameterizable
+        .data_in       (mem_stage_in.opr_b        ),
         .data_out      (mem_stage_out.dmem_rdata  )
     );
 
     assign mem_stage_out.opr_res = mem_stage_in.opr_res;
     assign mem_stage_out.rd      = mem_stage_in.rd;
-    assign mem_stage_out.wb_en   = mem_stage_in.wb_en;
+    assign mem_stage_out.rf_en   = mem_stage_in.rf_en;
     assign mem_stage_out.wb_sel  = mem_stage_in.wb_sel;
 
 endmodule: mem_stage

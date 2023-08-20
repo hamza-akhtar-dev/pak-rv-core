@@ -16,7 +16,7 @@ ifeq ($(DUT), core)
 	TOPLEVEL  = $(DUT)
 	PARAMS    = -GDATA_WIDTH=32
 	MODULE    = pytests.test_$(TOPLEVEL)
-	_SRCS     = if_stage.sv id_stage.sv ex_stage.sv mem_stage.sv wb_stage.sv ctrl_unit.sv core.sv
+	_SRCS     = ctrl_unit.sv if_stage.sv id_stage.sv ex_stage.sv mem_stage.sv wb_stage.sv core.sv
 	_SRCS_SUB = alu.sv dmem.sv pc.sv rf.sv
 	SIM_BUILD = build/build_$(TOPLEVEL)
 endif

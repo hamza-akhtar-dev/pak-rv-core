@@ -4,15 +4,15 @@ module rf
 # (
     parameter  DATA_WIDTH    = 32,
     parameter  NUM_REGISTERS = 32,
-    localparam ADDRESS_WIDTH = $clog2(NUM_REGISTERS)
+    localparam OP_ADDR_WIDTH = $clog2(NUM_REGISTERS)
 ) (
     input  logic                     arst_n,
     input  logic                     clk,
     input  logic                     wr_en_in,
-    input  logic [ADDRESS_WIDTH-1:0] rs1_in,  // source register 1 address
-    input  logic [ADDRESS_WIDTH-1:0] rs2_in,  // source register 2 address
-    input  logic [ADDRESS_WIDTH-1:0] rd_in,   // destination register address
+    input  logic [OP_ADDR_WIDTH-1:0] rd_in,   // destination register address
     input  logic [   DATA_WIDTH-1:0] rd_data_in,
+    input  logic [OP_ADDR_WIDTH-1:0] rs1_in,  // source register 1 address
+    input  logic [OP_ADDR_WIDTH-1:0] rs2_in,  // source register 2 address
     output logic [   DATA_WIDTH-1:0] rs1_data_out,
     output logic [   DATA_WIDTH-1:0] rs2_data_out
 );
@@ -20,7 +20,7 @@ module rf
     logic [DATA_WIDTH-1:0] reg_file [NUM_REGISTERS-1:0];
 
     // synchronous write
-    always_ff @(posedge clk, negedge arst_n)
+    always_ff @(negedge clk, negedge arst_n)
     begin
         if(~arst_n)
         begin

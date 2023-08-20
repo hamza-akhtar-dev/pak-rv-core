@@ -19,7 +19,7 @@ module wb_stage
         endcase
     end
 
-    assign wb_stage_out.wb_en = wb_stage_in.wb_en;
-    assign wb_stage_out.wb_rd = wb_stage_in.rd;
+    assign wb_stage_out.rd = wb_stage_in.rd;
+    assign wb_stage_out.rf_en = wb_stage_in.rf_en;
 
 endmodule: wb_stage
