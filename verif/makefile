@@ -11,10 +11,10 @@ PARAMS    = -GDATA_WIDTH=32
 MODULE    = pytests.test_$(TOPLEVEL)
 _SRCS     = if_stage.sv id_stage.sv ex_stage.sv mem_stage.sv wb_stage.sv ctrl_unit.sv core.sv
 _SRCS_SUB = alu.sv dmem.sv pc.sv rf.sv
-SIM_BUILD       = build/build_$(TOPLEVEL)
+SIM_BUILD = build/build_$(TOPLEVEL)
 
 # path substitution
-SRCS = $(patsubst %,$(SRC_DIR)/%,$(_SRCS))
+SRCS     = $(patsubst %,$(SRC_DIR)/%,$(_SRCS))
 SRCS_SUB = $(patsubst %,$(SUB_SRC_DIR)/%,$(_SRCS_SUB))
 
 # debug/trace settings

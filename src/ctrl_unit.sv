@@ -3,10 +3,7 @@
 `include "riscv.svh"
 
 module ctrl_unit #(
-    parameter DATA_WIDTH = 32
-)(
-    input  logic       clk,
-    input  logic       arst_n,
+) (
     input  logic [6:0] opcode,
     output logic       wb_en,
     output logic [1:0] wb_sel

@@ -39,19 +39,23 @@
             input logic [2:0] funct3
         );
 
-            aluop_t alu_op;
+            // TODO: add other cases
+
+            aluop_t aluop;
 
             case (funct3)
-                3'b000:  alu_op = (funct7[5]) ? alu_pkg::SUB : alu_pkg::ADD;
-                3'b001:  alu_op = alu_pkg::SLL;
-                3'b010:  alu_op = alu_pkg::SLT;
-                3'b011:  alu_op = alu_pkg::SLTU;
-                3'b100:  alu_op = alu_pkg::XOR;
-                3'b101:  alu_op = (funct7[5]) ? alu_pkg::SRA : alu_pkg::SRL;
-                3'b110:  alu_op = alu_pkg::OR;
-                3'b111:  alu_op = alu_pkg::AND;
-                default: alu_op = alu_pkg::ADD;
-            endcase        
+                3'b000:  aluop = (funct7[5]) ? alu_pkg::SUB : alu_pkg::ADD;
+                3'b001:  aluop = alu_pkg::SLL;
+                3'b010:  aluop = alu_pkg::SLT;
+                3'b011:  aluop = alu_pkg::SLTU;
+                3'b100:  aluop = alu_pkg::XOR;
+                3'b101:  aluop = (funct7[5]) ? alu_pkg::SRA : alu_pkg::SRL;
+                3'b110:  aluop = alu_pkg::OR;
+                3'b111:  aluop = alu_pkg::AND;
+                default: aluop = alu_pkg::ADD;
+            endcase
+
+            return aluop;   
 
         endfunction
         

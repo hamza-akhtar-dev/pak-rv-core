@@ -11,6 +11,8 @@ module id_stage
 ) (
     input  logic          clk,
     input  logic          arst_n,
+    input  logic          wb_en,
+    input  logic [1:0]    wb_sel,
     input  id_stage_in_t  id_stage_in,
     output id_stage_out_t id_stage_out
 );
@@ -21,7 +23,7 @@ module id_stage
     assign rs2 = id_stage_in.inst[24:20];
 
     rf # (
-        .DATA_WIDTH(DATA_WIDTH)
+        .DATA_WIDTH   (DATA_WIDTH         )
     ) i_rf (
         .clk          (clk                ),
         .arst_n       (arst_n             ),
@@ -42,5 +44,9 @@ module id_stage
 
     // immediate generation
     assign id_stage_out.imm    = gen_imm_f(id_stage_in.inst);
+
+    // control signals
+    assign id_stage_out.wb_en = wb_en;
+    assign id_stage_out.wb_sel = wb_sel;
 
 endmodule

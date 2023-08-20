@@ -9,15 +9,18 @@ module ex_stage
     import ex_stage_pkg::gen_aluop_f;
     import alu_pkg::aluop_t;
 # (
-    parameter DATA_WIDTH     = 32,
-    parameter NUM_REGISTERS  = 32,
-    localparam ADDRESS_WIDTH = $clog2(NUM_REGISTERS)
+    parameter DATA_WIDTH = 32
 ) (
-    input  logic          clk,
-    input  logic          arst_n,
     input  ex_stage_in_t  ex_stage_in,
     output ex_stage_out_t ex_stage_out
 );
+    // TODO: add immediate selection here
+        logic [ 4:0] shamt;
+        logic [31:0] imm;
+
+        assign shamt = ex_stage_in.shamt;
+        assign imm   = ex_stage_in.imm;
+    // -----------------------------------
 
     aluop_t alu_op;
 
@@ -32,7 +35,10 @@ module ex_stage
         .opr_result (ex_stage_out.opr_res)
     );
 
-    // signal bypassed to next stage
-    assign ex_stage_out.rd = ex_stage_in.rd;
+    // propagate signals to next stage
+    assign ex_stage_out.rd     = ex_stage_in.rd;
+    assign ex_stage_out.wb_en  = ex_stage_in.wb_en;
+    assign ex_stage_out.wb_sel = ex_stage_in.wb_sel;
+
 
 endmodule: ex_stage
