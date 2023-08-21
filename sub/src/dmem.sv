@@ -18,7 +18,7 @@ module dmem # (
 
     always_ff @ (posedge clk, negedge arst_n)
     begin
-        if (arst_n)
+        if (~arst_n)
         begin
             data_memory <= '{default: '0};
         end
