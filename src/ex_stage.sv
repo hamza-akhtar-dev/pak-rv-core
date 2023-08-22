@@ -35,4 +35,6 @@ module ex_stage
     assign ex_stage_out.dm_en  = ex_stage_in.dm_en;
     assign ex_stage_out.wb_sel = ex_stage_in.wb_sel;
 
+    assign ex_stage_out.lsuop  = ex_stage_in.lsuop;
+
 endmodule: ex_stage

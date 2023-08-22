@@ -3,6 +3,7 @@
 `define EX_STAGE_PKG_SVH
 
     `include "alu_pkg.svh"
+    `include "lsu_pkg.svh"
 
     package ex_stage_pkg;
 
@@ -16,6 +17,7 @@
             logic [31:0] imm;
             // ctrl
             aluop_t      aluop;
+            lsuop_t      lsuop;
             logic        rf_en;
             logic        dm_en;
             logic        opr_b_sel;
@@ -28,6 +30,7 @@
             logic signed [31:0] opr_b;
             logic signed [31:0] opr_res;
             // ctrl
+            lsuop_t             lsuop;
             logic               rf_en;
             logic               dm_en;
             logic        [ 1:0] wb_sel;

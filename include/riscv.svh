@@ -21,6 +21,15 @@
     `define FUNCT3_OR      3'b110
     `define FUNCT3_AND     3'b111
 
+    `define FUNCT3_LB  3'b000
+    `define FUNCT3_LH  3'b001
+    `define FUNCT3_LW  3'b010
+    `define FUNCT3_LBU 3'b100
+    `define FUNCT3_LHU 3'b101
+    `define FUNCT3_SB  3'b000
+    `define FUNCT3_SH  3'b001
+    `define FUNCT3_SW  3'b010
+
     `define FUNCT7_VAR1 7'b0000000
     `define FUNCT7_VAR2 7'b0100000
 

@@ -4,8 +4,10 @@
 
     `include "riscv.svh"
     `include "alu_pkg.svh"
+    `include "lsu_pkg.svh"
 
     import alu_pkg::aluop_t;
+    import lsu_pkg::lsuop_t;
 
     package id_stage_pkg;
 
@@ -22,6 +24,7 @@
             logic [31:0] imm;
             // ctrl
             aluop_t      aluop;
+            lsuop_t      lsuop;
             logic        rf_en;
             logic        dm_en;
             logic        opr_b_sel;

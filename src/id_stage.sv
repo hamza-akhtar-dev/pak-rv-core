@@ -54,6 +54,7 @@ module id_stage
         .funct7      (funct7                ),
         .funct3      (funct3                ),
         .aluop       (id_stage_out.aluop    ),
+        .lsuop       (id_stage_out.lsuop    ),
         .rf_en       (id_stage_out.rf_en    ),
         .dm_en       (id_stage_out.dm_en    ),
         .opr_b_sel   (id_stage_out.opr_b_sel),
