@@ -28,6 +28,15 @@ module ex_stage
         .opr_result (ex_stage_out.opr_res)
     );
 
+    cfu # (
+        .DATA_WIDTH(DATA_WIDTH           )
+    ) i_cfu (
+        .cfuop     (ex_stage_in.cfuop    ),
+        .opr_a     (ex_stage_in.opr_a    ),
+        .opr_b     (ex_stage_in.opr_b    ),
+        .br_taken  (ex_stage_out.br_taken)
+    );
+
     // propagate signals to next stage
     assign ex_stage_out.opr_b  = ex_stage_in.opr_b;
     assign ex_stage_out.rd     = ex_stage_in.rd;

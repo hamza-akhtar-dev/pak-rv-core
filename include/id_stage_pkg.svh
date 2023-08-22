@@ -3,9 +3,12 @@
 `define ID_STAGE_PKG_SVH
 
     `include "riscv.svh"
+
     `include "alu_pkg.svh"
+    `include "cfu_pkg.svh"
 
     import alu_pkg::aluop_t;
+    import cfu_pkg::cfuop_t;
 
     package id_stage_pkg;
 
@@ -22,6 +25,7 @@
             logic [31:0] imm;
             // ctrl
             aluop_t      aluop;
+            cfuop_t      cfuop;
             logic        rf_en;
             logic        dm_en;
             logic        opr_b_sel;
