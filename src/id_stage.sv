@@ -57,6 +57,7 @@ module id_stage
         .cfuop       (id_stage_out.cfuop    ),
         .rf_en       (id_stage_out.rf_en    ),
         .dm_en       (id_stage_out.dm_en    ),
+        .opr_a_sel   (id_stage_out.opr_a_sel),
         .opr_b_sel   (id_stage_out.opr_b_sel),
         .wb_sel      (id_stage_out.wb_sel   )
     );
@@ -65,5 +66,9 @@ module id_stage
 
     // immediate generation
     assign id_stage_out.imm = gen_imm_f(id_stage_in.inst);
+
+    // propagate signals to next stage
+    assign id_stage_out.pc  = id_stage_in.pc;
+    assign id_stage_out.pc4 = id_stage_in.pc4;
 
 endmodule

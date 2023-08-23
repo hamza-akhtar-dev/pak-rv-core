@@ -15,7 +15,8 @@
             BLTU,
             BGEU,
             JAL,
-            JALR
+            JALR,
+            NB  // no branch
         } cfuop_t;
 
         function automatic cfuop_t gen_cfuop_f
@@ -48,7 +49,7 @@
             end
             else
             begin
-                cfuop = BEQ;
+                cfuop = NB;
             end
 
             return cfuop;   

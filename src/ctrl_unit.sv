@@ -19,6 +19,7 @@ module ctrl_unit
     output cfuop_t     cfuop,
     output logic       rf_en,
     output logic       dm_en,
+    output logic       opr_a_sel,
     output logic       opr_b_sel,
     output logic [1:0] wb_sel
 );
@@ -34,6 +35,7 @@ module ctrl_unit
             begin
                 rf_en     = 1'b1;
                 dm_en     = 1'b0;
+                opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
             end
@@ -41,27 +43,55 @@ module ctrl_unit
             begin
                 rf_en     = 1'b1;
                 dm_en     = 1'b0;
-                opr_b_sel = 1'b1; 
+                opr_a_sel = 1'b0;
+                opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
             end
             `OPCODE_LOAD:
             begin
                 rf_en     = 1'b1;
                 dm_en     = 1'b0;
-                opr_b_sel = 1'b1; 
+                opr_a_sel = 1'b0;
+                opr_b_sel = 1'b1;
                 wb_sel    = 2'b01;
             end
             `OPCODE_STORE:
             begin
                 rf_en     = 1'b0;
                 dm_en     = 1'b1;
+                opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
+            end
+            `OPCODE_BRANCH:
+            begin
+                rf_en     = 1'b0;
+                dm_en     = 1'b0;
+                opr_a_sel = 1'b1;
+                opr_b_sel = 1'b1;
+                wb_sel    = 2'b00;
+            end
+            `OPCODE_JAL:
+            begin
+                rf_en     = 1'b1;
+                dm_en     = 1'b0;
+                opr_a_sel = 1'b1;
+                opr_b_sel = 1'b1;
+                wb_sel    = 2'b10;
+            end
+            `OPCODE_JALR:
+            begin
+                rf_en     = 1'b1;
+                dm_en     = 1'b0;
+                opr_a_sel = 1'b0;
+                opr_b_sel = 1'b1;
+                wb_sel    = 2'b10;
             end
             default:
             begin
                 rf_en     = 1'b0;
                 dm_en     = 1'b0;
+                opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
             end

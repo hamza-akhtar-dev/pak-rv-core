@@ -24,6 +24,7 @@ module cfu
             cfu_pkg::BGEU: br_taken = (opr_a >= opr_b) ? 1 : 0;
             cfu_pkg::JAL:  br_taken = 1;
             cfu_pkg::JALR: br_taken = 1;
+            cfu_pkg::NB:   br_taken = 0;
             default:       br_taken = 0;
         endcase
     end
