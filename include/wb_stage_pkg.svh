@@ -9,6 +9,7 @@
             logic signed [31:0] opr_res;
             logic        [31:0] dmem_rdata;
             logic        [ 4:0] rd;
+            logic        [31:0] pc4;
             // ctrl
             logic               rf_en;
             logic        [ 1:0] wb_sel;

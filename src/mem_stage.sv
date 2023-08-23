@@ -28,6 +28,7 @@ module mem_stage
 
     assign mem_stage_out.opr_res = mem_stage_in.opr_res;
     assign mem_stage_out.rd      = mem_stage_in.rd;
+    assign mem_stage_out.pc4     = mem_stage_in.pc4;
     assign mem_stage_out.rf_en   = mem_stage_in.rf_en;
     assign mem_stage_out.wb_sel  = mem_stage_in.wb_sel;
 
