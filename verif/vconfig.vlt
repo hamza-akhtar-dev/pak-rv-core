@@ -1,2 +1,2 @@
 `verilator_config
-lint_off -rule WIDTHTRUNC -file "*../src/if_stage.sv" -lines 44-44
+lint_off -rule WIDTHTRUNC -file "*../src/if_stage.sv" -lines 43-43

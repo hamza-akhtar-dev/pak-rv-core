@@ -62,7 +62,7 @@
                 end
                 `OPCODE_LUI, `OPCODE_AUIPC: // U-type
                 begin 
-                    imm = {{12{inst[31]}}, inst[31:12]};
+                    imm = {inst[31:12], 12'b0};
                 end
                 `OPCODE_JAL: // J-type
                 begin      

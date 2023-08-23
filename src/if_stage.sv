@@ -39,7 +39,6 @@ module if_stage
         .pc_out (pc_out )
     );
 
-
     // asychronous instruction read
     assign if_stage_out.inst = instruction_memory[pc_out[PC_SIZE-1:2]];
 

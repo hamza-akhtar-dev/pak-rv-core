@@ -18,7 +18,8 @@
             SRL, 
             SRA, 
             SLT, 
-            SLTU
+            SLTU,
+            BYP
         } aluop_t;
 
         function automatic aluop_t gen_aluop_f
@@ -29,6 +30,7 @@
         );
 
             aluop_t aluop;
+
             if (opcode == `OPCODE_OP)
             begin
                 case(funct3)
@@ -77,6 +79,10 @@
                     `FUNCT3_AND:  aluop = AND;
                     default:      aluop = ADD;
                 endcase
+            end
+            else if (opcode == `OPCODE_LUI)
+            begin
+                aluop = BYP;
             end
             else
             begin
