@@ -25,6 +25,7 @@ module alu
             alu_pkg::SRA:  opr_result = opr_a >>> opr_b;
             alu_pkg::SLT:  opr_result = opr_a < opr_b ? 1 : 0;
             alu_pkg::SLTU: opr_result = $unsigned(opr_a) < $unsigned(opr_b) ? 1 : 0;
+            alu_pkg::BYP:  opr_result = opr_b;  // bypass operand b
             default: opr_result = 0;
         endcase
     end

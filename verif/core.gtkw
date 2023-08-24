@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sun Aug 20 16:36:32 2023
+[*] Wed Aug 23 12:15:34 2023
 [*]
 [dumpfile] "/home/hamza/projects/Pak-RV-Core/verif/dump.vcd"
-[dumpfile_mtime] "Sun Aug 20 16:34:03 2023"
-[dumpfile_size] 99600
+[dumpfile_mtime] "Wed Aug 23 12:06:12 2023"
+[dumpfile_size] 640186
 [savefile] "/home/hamza/projects/Pak-RV-Core/verif/core.gtkw"
-[timestart] 0
-[size] 1908 987
+[timestart] 104200
+[size] 1908 1007
 [pos] -1 -1
-*-16.000000 93300 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.000000 258500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.core.
 [treeopen] top.core.i_ex_stage.
@@ -32,82 +32,121 @@ top.clk
 -Instruction Fetch
 -
 @22
-top.core.i_if_stage.i_pc.pc_in[9:0]
-top.core.i_if_stage.i_pc.pc_out[9:0]
+top.core.i_if_stage.if_stage_in.br_target[31:0]
+@28
+top.core.i_if_stage.if_stage_in.br_taken
+@22
+top.core.i_if_stage.pc4[31:0]
+top.core.i_if_stage.pc_in[31:0]
+top.core.i_if_stage.pc_out[31:0]
+@200
+-
+@22
 top.core.i_if_stage.if_stage_out.inst[31:0]
+top.core.i_if_stage.if_stage_out.pc4[31:0]
+top.core.i_if_stage.if_stage_out.pc[31:0]
 @200
 -
 -Instruction Decode
 -
 @22
+top.core.i_id_stage.wb_in.rd[4:0]
+@28
+top.core.i_id_stage.wb_in.rf_en
+@22
+top.core.i_id_stage.wb_in.wb_data[31:0]
 top.core.i_id_stage.id_stage_in.inst[31:0]
+top.core.i_id_stage.id_stage_in.pc4[31:0]
+top.core.i_id_stage.id_stage_in.pc[31:0]
 @200
 -
 @22
-top.core.i_id_stage.id_stage_out.opr_a[31:0]
-top.core.i_id_stage.id_stage_out.opr_b[31:0]
-top.core.i_id_stage.id_stage_out.imm[31:0]
 top.core.i_id_stage.id_stage_out.aluop[3:0]
+top.core.i_id_stage.id_stage_out.cfuop[3:0]
 @28
-top.core.i_id_stage.id_stage_out.rf_en
 top.core.i_id_stage.id_stage_out.dm_en
 @22
+top.core.i_id_stage.id_stage_out.imm[31:0]
+top.core.i_id_stage.id_stage_out.opr_a[31:0]
+@28
+top.core.i_id_stage.id_stage_out.opr_a_sel
+@22
+top.core.i_id_stage.id_stage_out.opr_b[31:0]
+@28
+top.core.i_id_stage.id_stage_out.opr_b_sel
+@22
+top.core.i_id_stage.id_stage_out.pc4[31:0]
+top.core.i_id_stage.id_stage_out.pc[31:0]
 top.core.i_id_stage.id_stage_out.rd[4:0]
 @28
+top.core.i_id_stage.id_stage_out.rf_en
 top.core.i_id_stage.id_stage_out.wb_sel[1:0]
 @200
 -
 -Execution
 -
 @22
-top.core.i_ex_stage.ex_stage_in.opr_a[31:0]
-top.core.i_ex_stage.ex_stage_in.opr_b[31:0]
-top.core.i_ex_stage.ex_stage_in.imm[31:0]
 top.core.i_ex_stage.ex_stage_in.aluop[3:0]
+top.core.i_ex_stage.ex_stage_in.cfuop[3:0]
 @28
-top.core.i_ex_stage.ex_stage_in.rf_en
 top.core.i_ex_stage.ex_stage_in.dm_en
 @22
-top.core.i_ex_stage.ex_stage_in.rd[4:0]
+top.core.i_ex_stage.ex_stage_in.imm[31:0]
+top.core.i_ex_stage.ex_stage_in.opr_a[31:0]
+@28
+top.core.i_ex_stage.ex_stage_in.opr_a_sel
+@22
+top.core.i_ex_stage.ex_stage_in.opr_b[31:0]
 @28
 top.core.i_ex_stage.ex_stage_in.opr_b_sel
+@22
+top.core.i_ex_stage.ex_stage_in.pc4[31:0]
+top.core.i_ex_stage.ex_stage_in.pc[31:0]
+top.core.i_ex_stage.ex_stage_in.rd[4:0]
+@28
+top.core.i_ex_stage.ex_stage_in.rf_en
 top.core.i_ex_stage.ex_stage_in.wb_sel[1:0]
 @200
 -
+@28
+top.core.i_ex_stage.ex_stage_out.dm_en
 @22
 top.core.i_ex_stage.ex_stage_out.opr_b[31:0]
 top.core.i_ex_stage.ex_stage_out.opr_res[31:0]
-@28
-top.core.i_ex_stage.ex_stage_out.rf_en
-top.core.i_ex_stage.ex_stage_out.dm_en
-@22
+top.core.i_ex_stage.ex_stage_out.pc4[31:0]
 top.core.i_ex_stage.ex_stage_out.rd[4:0]
 @28
+top.core.i_ex_stage.ex_stage_out.rf_en
 top.core.i_ex_stage.ex_stage_out.wb_sel[1:0]
+@200
+-
+@28
+top.core.i_ex_stage.ex_cfu_out.br_taken
+@22
+top.core.i_ex_stage.ex_cfu_out.br_target[31:0]
 @200
 -
 -Memory
 -
+@28
+top.core.i_mem_stage.mem_stage_in.dm_en
 @22
 top.core.i_mem_stage.mem_stage_in.opr_b[31:0]
 top.core.i_mem_stage.mem_stage_in.opr_res[31:0]
-@28
-top.core.i_mem_stage.mem_stage_in.rf_en
-top.core.i_mem_stage.mem_stage_in.dm_en
-@22
+top.core.i_mem_stage.mem_stage_in.pc4[31:0]
 top.core.i_mem_stage.mem_stage_in.rd[4:0]
 @28
+top.core.i_mem_stage.mem_stage_in.rf_en
 top.core.i_mem_stage.mem_stage_in.wb_sel[1:0]
 @200
 -
 @22
 top.core.i_mem_stage.mem_stage_out.dmem_rdata[31:0]
 top.core.i_mem_stage.mem_stage_out.opr_res[31:0]
-@28
-top.core.i_mem_stage.mem_stage_out.rf_en
-@22
+top.core.i_mem_stage.mem_stage_out.pc4[31:0]
 top.core.i_mem_stage.mem_stage_out.rd[4:0]
 @28
+top.core.i_mem_stage.mem_stage_out.rf_en
 top.core.i_mem_stage.mem_stage_out.wb_sel[1:0]
 @200
 -
@@ -116,18 +155,18 @@ top.core.i_mem_stage.mem_stage_out.wb_sel[1:0]
 @22
 top.core.i_wb_stage.wb_stage_in.dmem_rdata[31:0]
 top.core.i_wb_stage.wb_stage_in.opr_res[31:0]
-@28
-top.core.i_wb_stage.wb_stage_in.rf_en
-@22
+top.core.i_wb_stage.wb_stage_in.pc4[31:0]
 top.core.i_wb_stage.wb_stage_in.rd[4:0]
 @28
+top.core.i_wb_stage.wb_stage_in.rf_en
 top.core.i_wb_stage.wb_stage_in.wb_sel[1:0]
 @200
 -
+@22
+top.core.i_wb_stage.wb_stage_out.rd[4:0]
 @28
 top.core.i_wb_stage.wb_stage_out.rf_en
 @22
-top.core.i_wb_stage.wb_stage_out.rd[4:0]
 top.core.i_wb_stage.wb_stage_out.wb_data[31:0]
 @200
 -
@@ -143,7 +182,9 @@ top.core.i_id_stage.i_rf.reg_file[4][31:0]
 top.core.i_id_stage.i_rf.reg_file[5][31:0]
 @22
 top.core.i_id_stage.i_rf.reg_file[6][31:0]
+@23
 top.core.i_id_stage.i_rf.reg_file[7][31:0]
+@22
 top.core.i_id_stage.i_rf.reg_file[8][31:0]
 top.core.i_id_stage.i_rf.reg_file[9][31:0]
 top.core.i_id_stage.i_rf.reg_file[10][31:0]
@@ -174,9 +215,8 @@ top.core.i_id_stage.i_rf.reg_file[31][31:0]
 -
 @28
 top.core.i_mem_stage.i_dmem.write_en
-@23
-top.core.i_mem_stage.i_dmem.addr[9:0]
 @22
+top.core.i_mem_stage.i_dmem.addr[9:0]
 top.core.i_mem_stage.i_dmem.data_in[31:0]
 top.core.i_mem_stage.i_dmem.data_out[31:0]
 [pattern_trace] 1

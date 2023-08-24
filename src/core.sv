@@ -7,6 +7,7 @@
 `include "wb_stage_pkg.svh"
 
 module core 
+    import if_stage_pkg ::if_stage_in_t;
     import id_stage_pkg ::id_stage_in_t;
     import ex_stage_pkg ::ex_stage_in_t;
     import mem_stage_pkg::mem_stage_in_t;
@@ -16,6 +17,8 @@ module core
     import ex_stage_pkg ::ex_stage_out_t;
     import mem_stage_pkg::mem_stage_out_t;
     import wb_stage_pkg ::wb_stage_out_t;
+
+    import ex_stage_pkg ::ex_cfu_out_t;
 # (
     parameter  DATA_WIDTH    = 32,
     parameter  IMEM_SZ_IN_KB = 1,
@@ -25,7 +28,7 @@ module core
     input  logic arst_n
 );
     // stage signals
-
+    if_stage_in_t  if_stage_in;
     if_stage_out_t if_stage_out;
 
     id_stage_in_t  id_stage_in;
@@ -40,6 +43,9 @@ module core
     wb_stage_in_t  wb_stage_in;
     wb_stage_out_t wb_stage_out;
 
+    // combinational connection signals
+    ex_cfu_out_t   ex_cfu_out;
+
     // stage instantiations
     if_stage # (
         .DATA_WIDTH    (DATA_WIDTH   ),
@@ -47,6 +53,7 @@ module core
     ) i_if_stage (
         .clk           (clk          ),
         .arst_n        (arst_n       ),
+        .if_stage_in   (if_stage_in  ),
         .if_stage_out  (if_stage_out )
     );
 
@@ -64,7 +71,8 @@ module core
         .DATA_WIDTH  (DATA_WIDTH  )
     ) i_ex_stage (
         .ex_stage_in (ex_stage_in ),
-        .ex_stage_out(ex_stage_out)
+        .ex_stage_out(ex_stage_out),
+        .ex_cfu_out  (ex_cfu_out  )
     );
 
     mem_stage #(
@@ -82,6 +90,12 @@ module core
         .wb_stage_in  (wb_stage_in  ),
         .wb_stage_out (wb_stage_out )
     );
+
+    // combinational connections
+    always_comb
+    begin
+        if_stage_in = ex_cfu_out;
+    end
 
     // pipeline registers
     always_ff @(posedge clk or negedge arst_n) 

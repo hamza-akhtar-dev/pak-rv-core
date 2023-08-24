@@ -3,10 +3,13 @@
 `define ID_STAGE_PKG_SVH
 
     `include "riscv.svh"
+
     `include "alu_pkg.svh"
+    `include "cfu_pkg.svh"
     `include "lsu_pkg.svh"
 
     import alu_pkg::aluop_t;
+    import cfu_pkg::cfuop_t;
     import lsu_pkg::lsuop_t;
 
     package id_stage_pkg;
@@ -14,6 +17,8 @@
         typedef struct packed 
         {
             logic [31:0] inst;
+            logic [31:0] pc;
+            logic [31:0] pc4;
         } id_stage_in_t;
 
         typedef struct packed 
@@ -22,11 +27,15 @@
             logic [31:0] opr_a;
             logic [31:0] opr_b;
             logic [31:0] imm;
+            logic [31:0] pc;
+            logic [31:0] pc4;
             // ctrl
             aluop_t      aluop;
+            cfuop_t      cfuop;
             lsuop_t      lsuop;
             logic        rf_en;
             logic        dm_en;
+            logic        opr_a_sel;
             logic        opr_b_sel;
             logic [ 1:0] wb_sel;
         } id_stage_out_t;
@@ -56,7 +65,7 @@
                 end
                 `OPCODE_LUI, `OPCODE_AUIPC: // U-type
                 begin 
-                    imm = {{12{inst[31]}}, inst[31:12]};
+                    imm = {inst[31:12], 12'b0};
                 end
                 `OPCODE_JAL: // J-type
                 begin      

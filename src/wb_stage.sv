@@ -15,6 +15,7 @@ module wb_stage
         case(wb_stage_in.wb_sel)
             2'b00:   wb_stage_out.wb_data = wb_stage_in.opr_res;
             2'b01:   wb_stage_out.wb_data = wb_stage_in.lsu_rdata; // no more data from dmem, but from lsu
+            2'b10:   wb_stage_out.wb_data = wb_stage_in.pc4;
             default: wb_stage_out.wb_data = 0;
         endcase
     end
