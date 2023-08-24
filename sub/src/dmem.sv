@@ -26,13 +26,15 @@ module dmem # (
         end
         else if (write_en)
         begin
-            case(mask)
-                4'b0001: data_memory[addr[ADDR_WIDTH-1:2]][7:0]   <= data_in[7:0];
-                4'b0010: data_memory[addr[ADDR_WIDTH-1:2]][15:8]  <= data_in[15:8];
-                4'b0100: data_memory[addr[ADDR_WIDTH-1:2]][23:16] <= data_in[23:16];
-                4'b1000: data_memory[addr[ADDR_WIDTH-1:2]][31:24] <= data_in[31:24];
-                default: data_memory[addr[ADDR_WIDTH-1:2]]        <= '0;
-            endcase
+            if (mask[0]) data_memory[addr[ADDR_WIDTH-1:2]][7:0]   <= data_in[7:0];
+            if (mask[1]) data_memory[addr[ADDR_WIDTH-1:2]][15:8]  <= data_in[15:8];
+            if (mask[2]) data_memory[addr[ADDR_WIDTH-1:2]][23:16] <= data_in[23:16];
+            if (mask[3]) data_memory[addr[ADDR_WIDTH-1:2]][31:24] <= data_in[31:24];
+            else         data_memory[addr[ADDR_WIDTH-1:2]]        <= '0;
+        end
+        else
+        begin
+            data_memory[addr[ADDR_WIDTH-1:2]]        <= '0;
         end
     end
 

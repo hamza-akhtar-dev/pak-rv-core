@@ -12,11 +12,10 @@
             logic signed [31:0] opr_b;
             logic signed [31:0] opr_res;
             // ctrl
+            lsuop_t             lsuop;
             logic               rf_en;
             logic               dm_en;
             logic        [ 1:0] wb_sel;
-
-            lsuop_t             lsuop;
         } mem_stage_in_t;
 
         typedef struct packed 

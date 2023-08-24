@@ -8,6 +8,7 @@
         {
             logic signed [31:0] opr_res;
             logic        [31:0] dmem_rdata;
+            logic        [31:0] lsu_rdata;  // data to be loaded in RF from DMEM but manipulated by LSU
             logic        [ 4:0] rd;
             // ctrl
             logic               rf_en;
@@ -17,6 +18,7 @@
         typedef struct packed 
         {
             logic [31:0] wb_data;
+            logic [31:0] lsu_rdata;  // data to be loaded in RF from DMEM but manipulated by LSU
             logic [ 4:0] rd;
             // ctrl
             logic        rf_en;

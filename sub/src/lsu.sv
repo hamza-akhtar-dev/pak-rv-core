@@ -6,14 +6,15 @@ module lsu
     import lsu_pkg::lsuop_t;
 # (
     parameter DATA_WIDTH      = 32,
+    parameter ADDR_WIDTH      = 32,
     localparam MASK_SIZE      = DATA_WIDTH/8,
     localparam BYTE_SIZE      = 8,
     localparam HALF_WORD_SIZE = 16
 ) (
     input  lsuop_t                       lsuop,
 
-    input  logic signed [DATA_WIDTH-1:0] addr_in,     //from alu out
-    output logic signed [DATA_WIDTH-1:0] addr_out,    //to dmem
+    input  logic signed [ADDR_WIDTH-1:0] addr_in,     //from alu out
+    output logic signed [ADDR_WIDTH-1:0] addr_out,    //to dmem
 
     input  logic signed [DATA_WIDTH-1:0] data_s_in,   //data to be stored
     output logic signed [DATA_WIDTH-1:0] data_s_out,  //data to be stored manipulated by LSU
@@ -38,6 +39,11 @@ module lsu
         case(lsuop)
             lsu_pkg::LB, lsu_pkg::LBU:
             begin
+                rdata_hword = '0;
+                rdata_word  = '0;
+                mask        = '0;
+                data_s_out  = '0;
+
                 case(addr_in[1:0])
                     2'b00:   rdata_byte = data_l_in[7:0];
                     2'b01:   rdata_byte = data_l_in[15:8];
@@ -48,6 +54,11 @@ module lsu
             end
             lsu_pkg::LH, lsu_pkg::LHU:
             begin
+                rdata_byte = '0;
+                rdata_word = '0;
+                mask       = '0;
+                data_s_out = '0;
+
                 case(addr_in[1])
                     1'b0:    rdata_hword = data_l_in[15:0];
                     1'b1:    rdata_hword = data_l_in[31:16];
@@ -56,10 +67,18 @@ module lsu
             end
             lsu_pkg::LW:
             begin
-                rdata_word = data_l_in;
+                rdata_byte  = '0;
+                rdata_hword = '0;
+                mask        = '0;
+                data_s_out  = '0;
+                rdata_word  = data_l_in;
             end
             lsu_pkg::SB:
             begin
+                rdata_byte  = '0;
+                rdata_hword = '0;
+                rdata_word  = '0;
+
                 case(addr_in[1:0])
                     2'b00:
                     begin
@@ -90,6 +109,10 @@ module lsu
             end 
             lsu_pkg::SH:
             begin
+                rdata_byte  = '0;
+                rdata_hword = '0;
+                rdata_word  = '0;
+
                 case(addr_in[1])
                     1'b0:
                     begin
@@ -110,6 +133,10 @@ module lsu
             end
             lsu_pkg::SW:
             begin
+                rdata_byte  = '0;
+                rdata_hword = '0;
+                rdata_word  = '0;
+
                 data_s_out = data_s_in;
                 mask       = 4'b1111;
             end
