@@ -2,7 +2,7 @@
 # we want to convert asm to machine code or c to machine code
 
 MACHINE_LANG = asm
-ASM_FILE     = control_flow
+ASM_FILE     = upper_imm
 C_FILE       = factorial
 DUT          = core
 

@@ -87,6 +87,22 @@ module ctrl_unit
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
             end
+            `OPCODE_LUI:
+            begin
+                rf_en     = 1'b1;
+                dm_en     = 1'b0;
+                opr_a_sel = 1'b0;
+                opr_b_sel = 1'b1;
+                wb_sel    = 2'b00;
+            end
+            `OPCODE_AUIPC:
+            begin
+                rf_en     = 1'b1;
+                dm_en     = 1'b0;
+                opr_a_sel = 1'b1;
+                opr_b_sel = 1'b1;
+                wb_sel    = 2'b00;
+            end
             default:
             begin
                 rf_en     = 1'b0;
