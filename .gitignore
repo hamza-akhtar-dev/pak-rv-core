@@ -5,6 +5,7 @@ build/
 sim_build/
 results.xml
 dump.vcd
+dmem.mem
 
 # ===== Ignore local vscode setup files
 .vscode/
