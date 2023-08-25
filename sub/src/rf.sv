@@ -36,4 +36,10 @@ module rf
     assign rs1_data_out = reg_file[rs1_in];
     assign rs2_data_out = reg_file[rs2_in];
 
+    // for debugging purpose
+    final
+    begin
+        $writememh("rf.mem", reg_file, 0, 31);
+    end
+
 endmodule
