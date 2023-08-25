@@ -6,6 +6,8 @@
 
     package mem_stage_pkg;
 
+        import lsu_pkg::lsuop_t;
+
         typedef struct packed 
         {
             logic        [ 4:0] rd;
@@ -22,8 +24,7 @@
         typedef struct packed 
         {
             logic signed [31:0] opr_res;
-            logic        [31:0] dmem_rdata;
-            logic        [31:0] lsu_rdata;  // data to be loaded in RF from DMEM but manipulated by LSU
+            logic        [31:0] lsu_rdata;
             logic        [ 4:0] rd;
             logic        [31:0] pc4;
             // ctrl

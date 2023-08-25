@@ -29,6 +29,7 @@
     `define FUNCT3_SB   3'b000
     `define FUNCT3_SH   3'b001
     `define FUNCT3_SW   3'b010
+    
     `define FUNCT3_BEQ  3'b000
     `define FUNCT3_BNE  3'b001
     `define FUNCT3_BLT  3'b100

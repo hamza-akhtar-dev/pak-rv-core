@@ -8,10 +8,10 @@
 
 module ctrl_unit 
     import alu_pkg::aluop_t;
-    import alu_pkg::gen_aluop_f;
     import cfu_pkg::cfuop_t;
-    import cfu_pkg::gen_cfuop_f;
     import lsu_pkg::lsuop_t;
+    import alu_pkg::gen_aluop_f;
+    import cfu_pkg::gen_cfuop_f;
     import lsu_pkg::gen_lsuop_f;
 #(
 ) (
