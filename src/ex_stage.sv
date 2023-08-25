@@ -50,8 +50,10 @@ module ex_stage
     assign ex_stage_out.rf_en   = ex_stage_in.rf_en;
     assign ex_stage_out.dm_en   = ex_stage_in.dm_en;
     assign ex_stage_out.wb_sel  = ex_stage_in.wb_sel;
+    assign ex_stage_out.lsuop   = ex_stage_in.lsuop;
 
     // combinational signals
     assign ex_cfu_out.br_target = opr_res;
+
 
 endmodule: ex_stage

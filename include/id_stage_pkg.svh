@@ -6,9 +6,11 @@
 
     `include "alu_pkg.svh"
     `include "cfu_pkg.svh"
+    `include "lsu_pkg.svh"
 
     import alu_pkg::aluop_t;
     import cfu_pkg::cfuop_t;
+    import lsu_pkg::lsuop_t;
 
     package id_stage_pkg;
 
@@ -30,6 +32,7 @@
             // ctrl
             aluop_t      aluop;
             cfuop_t      cfuop;
+            lsuop_t      lsuop;
             logic        rf_en;
             logic        dm_en;
             logic        opr_a_sel;

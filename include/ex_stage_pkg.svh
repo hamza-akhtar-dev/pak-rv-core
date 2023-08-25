@@ -4,11 +4,13 @@
 
     `include "alu_pkg.svh"
     `include "cfu_pkg.svh"
+    `include "lsu_pkg.svh"
 
     package ex_stage_pkg;
 
         import alu_pkg::aluop_t;
         import cfu_pkg::cfuop_t;
+        import lsu_pkg::lsuop_t;
 
         typedef struct packed 
         {
@@ -21,6 +23,7 @@
             // ctrl
             aluop_t      aluop;
             cfuop_t      cfuop;
+            lsuop_t      lsuop;
             logic        rf_en;
             logic        dm_en;
             logic        opr_a_sel;
@@ -35,6 +38,7 @@
             logic signed [31:0] opr_res;
             logic        [31:0] pc4;
             // ctrl
+            lsuop_t             lsuop;
             logic               rf_en;
             logic               dm_en;
             logic        [ 1:0] wb_sel;

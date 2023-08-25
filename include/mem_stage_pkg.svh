@@ -2,7 +2,11 @@
 
 `define MEM_STAGE_PKG_SVH
 
+    `include "lsu_pkg.svh"
+
     package mem_stage_pkg;
+
+        import lsu_pkg::lsuop_t;
 
         typedef struct packed 
         {
@@ -11,6 +15,7 @@
             logic signed [31:0] opr_res;
             logic        [31:0] pc4;
             // ctrl
+            lsuop_t             lsuop;
             logic               rf_en;
             logic               dm_en;
             logic        [ 1:0] wb_sel;
@@ -19,7 +24,7 @@
         typedef struct packed 
         {
             logic signed [31:0] opr_res;
-            logic        [31:0] dmem_rdata;
+            logic        [31:0] lsu_rdata;
             logic        [ 4:0] rd;
             logic        [31:0] pc4;
             // ctrl
