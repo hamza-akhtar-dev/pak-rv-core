@@ -1,6 +1,6 @@
 name: Core
 
-on: [push]
+on: [workflow_dispatch]
 
 jobs:
 
