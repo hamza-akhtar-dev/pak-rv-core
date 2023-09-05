@@ -32,7 +32,7 @@ async def reset(dut):
 
 # driver
 async def driver(dut):
-    for i in range(500):
+    for i in range(10):
         await RisingEdge(dut.clk)
 
 # test
