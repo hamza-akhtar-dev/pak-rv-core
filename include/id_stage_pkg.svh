@@ -23,6 +23,8 @@
 
         typedef struct packed 
         {
+            logic [ 4:0] rs1;
+            logic [ 4:0] rs2;
             logic [ 4:0] rd;
             logic [31:0] opr_a;
             logic [31:0] opr_b;

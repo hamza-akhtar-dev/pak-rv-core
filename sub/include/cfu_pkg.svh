@@ -8,6 +8,7 @@
 
         typedef enum logic[3:0] 
         {  
+            NB, // no branch
             BEQ,
             BNE,
             BLT,
@@ -15,8 +16,7 @@
             BLTU,
             BGEU,
             JAL,
-            JALR,
-            NB  // no branch
+            JALR
         } cfuop_t;
 
         function automatic cfuop_t gen_cfuop_f
