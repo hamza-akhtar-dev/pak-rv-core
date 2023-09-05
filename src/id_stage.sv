@@ -69,6 +69,8 @@ module id_stage
     assign id_stage_out.imm = gen_imm_f(id_stage_in.inst);
 
     // propagate signals to next stage
+    assign id_stage_out.rs1 = rs1;
+    assign id_stage_out.rs2 = rs2;
     assign id_stage_out.pc  = id_stage_in.pc;
     assign id_stage_out.pc4 = id_stage_in.pc4;
 

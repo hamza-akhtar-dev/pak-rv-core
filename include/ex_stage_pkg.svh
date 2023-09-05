@@ -12,8 +12,10 @@
         import cfu_pkg::cfuop_t;
         import lsu_pkg::lsuop_t;
 
-        typedef struct packed 
+        typedef struct packed
         {
+            logic [ 4:0] rs1;
+            logic [ 4:0] rs2;
             logic [ 4:0] rd;
             logic [31:0] opr_a;
             logic [31:0] opr_b;
@@ -31,7 +33,13 @@
             logic [ 1:0] wb_sel;
         } ex_stage_in_t;
 
-        typedef struct packed 
+        typedef struct packed
+        {
+            logic [ 4:0] rd_frm_mem;
+            logic [31:0] opr_res_frm_mem;
+        } ex_stage_in_frm_mem_t;
+
+        typedef struct packed
         {
             logic        [ 4:0] rd;
             logic signed [31:0] opr_b;

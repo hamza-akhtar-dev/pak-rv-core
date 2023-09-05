@@ -5,31 +5,46 @@
 
 module ex_stage
     import ex_stage_pkg::ex_stage_in_t;
+    import ex_stage_pkg::ex_stage_in_frm_mem_t;
     import ex_stage_pkg::ex_stage_out_t;
     import ex_stage_pkg::ex_cfu_out_t;
-    import alu_pkg::aluop_t;
+    import alu_pkg     ::aluop_t;
 # (
     parameter DATA_WIDTH = 32
 ) (
-    input  ex_stage_in_t  ex_stage_in,
-    output ex_stage_out_t ex_stage_out,
-    output ex_cfu_out_t   ex_cfu_out
+    input  ex_stage_in_t         ex_stage_in,
+    input  ex_stage_in_frm_mem_t ex_stage_in_frm_mem,
+    output ex_stage_out_t        ex_stage_out,
+    output ex_cfu_out_t          ex_cfu_out
 );
 
+    logic is_for_opr_a;
+    logic is_for_opr_b;
+
+    logic signed [DATA_WIDTH-1:0] for_opr_a;
+    logic signed [DATA_WIDTH-1:0] for_opr_b;
     logic signed [DATA_WIDTH-1:0] opr_a;
     logic signed [DATA_WIDTH-1:0] opr_b;
     logic signed [DATA_WIDTH-1:0] opr_res;
 
+    // forwarding conditioning
+    assign is_for_opr_a = (ex_stage_in_frm_mem.rd_frm_mem == ex_stage_in.rs1) ? 1'b1 : 1'b0;
+    assign is_for_opr_b = (ex_stage_in_frm_mem.rd_frm_mem == ex_stage_in.rs2) ? 1'b1 : 1'b0;
+
     // second operand selection
-    assign opr_a = (ex_stage_in.opr_a_sel) ? ex_stage_in.pc : ex_stage_in.opr_a;
+    assign opr_a = (ex_stage_in.opr_a_sel) ? ex_stage_in.pc  : ex_stage_in.opr_a;
     assign opr_b = (ex_stage_in.opr_b_sel) ? ex_stage_in.imm : ex_stage_in.opr_b;
+
+    // forwarding the operands
+    assign for_opr_a = is_for_opr_a ? ex_stage_in_frm_mem.opr_res_frm_mem : opr_a;
+    assign for_opr_b = is_for_opr_b ? ex_stage_in_frm_mem.opr_res_frm_mem : opr_b;
 
     alu # (
         .DATA_WIDTH (DATA_WIDTH       )
     ) i_alu (
         .aluop      (ex_stage_in.aluop),
-        .opr_a      (opr_a            ),
-        .opr_b      (opr_b            ),
+        .opr_a      (for_opr_a        ),
+        .opr_b      (for_opr_b        ),
         .opr_result (opr_res          )
     );
 

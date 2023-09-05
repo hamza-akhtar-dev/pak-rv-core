@@ -19,6 +19,7 @@ module core
     import wb_stage_pkg ::wb_stage_out_t;
 
     import ex_stage_pkg ::ex_cfu_out_t;
+    import ex_stage_pkg ::ex_stage_in_frm_mem_t;
 # (
     parameter  DATA_WIDTH    = 32,
     parameter  IMEM_SZ_IN_KB = 1,
@@ -44,7 +45,8 @@ module core
     wb_stage_out_t wb_stage_out;
 
     // combinational connection signals
-    ex_cfu_out_t   ex_cfu_out;
+    ex_cfu_out_t          ex_cfu_out;
+    ex_stage_in_frm_mem_t ex_stage_in_frm_mem;
 
     // stage instantiations
     if_stage # (
@@ -70,9 +72,10 @@ module core
     ex_stage #(
         .DATA_WIDTH  (DATA_WIDTH  )
     ) i_ex_stage (
-        .ex_stage_in (ex_stage_in ),
-        .ex_stage_out(ex_stage_out),
-        .ex_cfu_out  (ex_cfu_out  )
+        .ex_stage_in        (ex_stage_in        ),
+        .ex_stage_in_frm_mem(ex_stage_in_frm_mem),
+        .ex_stage_out       (ex_stage_out       ),
+        .ex_cfu_out         (ex_cfu_out         )
     );
 
     mem_stage #(
@@ -94,7 +97,9 @@ module core
     // combinational connections
     always_comb
     begin
-        if_stage_in = ex_cfu_out;
+        if_stage_in                         = ex_cfu_out;
+        ex_stage_in_frm_mem.rd_frm_mem      = mem_stage_in.rd;
+        ex_stage_in_frm_mem.opr_res_frm_mem = mem_stage_in.opr_res;
     end
 
     // pipeline registers
