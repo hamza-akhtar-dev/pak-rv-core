@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed Aug 23 12:15:34 2023
+[*] Wed Sep  6 07:23:19 2023
 [*]
 [dumpfile] "/home/hamza/projects/Pak-RV-Core/verif/dump.vcd"
-[dumpfile_mtime] "Wed Aug 23 12:06:12 2023"
-[dumpfile_size] 640186
+[dumpfile_mtime] "Wed Sep  6 07:17:37 2023"
+[dumpfile_size] 39036
 [savefile] "/home/hamza/projects/Pak-RV-Core/verif/core.gtkw"
-[timestart] 104200
+[timestart] 0
 [size] 1908 1007
 [pos] -1 -1
-*-16.000000 258500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.000000 54140 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.core.
 [treeopen] top.core.i_ex_stage.
@@ -20,7 +20,7 @@
 [sst_width] 253
 [signals_width] 335
 [sst_expanded] 1
-[sst_vpaned_height] 395
+[sst_vpaned_height] 405
 @200
 -Clock and Reset Interface
 -
@@ -108,6 +108,28 @@ top.core.i_ex_stage.ex_stage_in.rf_en
 top.core.i_ex_stage.ex_stage_in.wb_sel[1:0]
 @200
 -
+-HDU
+@28
+top.core.i_ex_stage.i_hdu.for_a[1:0]
+top.core.i_ex_stage.i_hdu.for_b[1:0]
+@22
+top.core.i_ex_stage.i_hdu.rs1[4:0]
+top.core.i_ex_stage.i_hdu.rs2[4:0]
+top.core.i_ex_stage.i_hdu.rd_frm_mem[4:0]
+top.core.i_ex_stage.i_hdu.rd_frm_wb[4:0]
+@28
+top.core.i_ex_stage.i_hdu.rf_en_frm_mem
+@29
+top.core.i_ex_stage.i_hdu.rf_en_frm_wb
+@200
+-
+-ALU
+@22
+top.core.i_ex_stage.i_alu.opr_a[31:0]
+top.core.i_ex_stage.i_alu.opr_b[31:0]
+top.core.i_ex_stage.i_alu.opr_result[31:0]
+@200
+-
 @28
 top.core.i_ex_stage.ex_stage_out.dm_en
 @22
@@ -141,7 +163,6 @@ top.core.i_mem_stage.mem_stage_in.wb_sel[1:0]
 @200
 -
 @22
-top.core.i_mem_stage.mem_stage_out.dmem_rdata[31:0]
 top.core.i_mem_stage.mem_stage_out.opr_res[31:0]
 top.core.i_mem_stage.mem_stage_out.pc4[31:0]
 top.core.i_mem_stage.mem_stage_out.rd[4:0]
@@ -153,7 +174,6 @@ top.core.i_mem_stage.mem_stage_out.wb_sel[1:0]
 -Writeback
 -
 @22
-top.core.i_wb_stage.wb_stage_in.dmem_rdata[31:0]
 top.core.i_wb_stage.wb_stage_in.opr_res[31:0]
 top.core.i_wb_stage.wb_stage_in.pc4[31:0]
 top.core.i_wb_stage.wb_stage_in.rd[4:0]
@@ -182,9 +202,7 @@ top.core.i_id_stage.i_rf.reg_file[4][31:0]
 top.core.i_id_stage.i_rf.reg_file[5][31:0]
 @22
 top.core.i_id_stage.i_rf.reg_file[6][31:0]
-@23
 top.core.i_id_stage.i_rf.reg_file[7][31:0]
-@22
 top.core.i_id_stage.i_rf.reg_file[8][31:0]
 top.core.i_id_stage.i_rf.reg_file[9][31:0]
 top.core.i_id_stage.i_rf.reg_file[10][31:0]
