@@ -1,6 +1,6 @@
-// Hazard Detection Unit
+// Forwarding Unit
 
-module hdu
+module fu
 #(
 ) (
     input  logic [4:0] rs1,
@@ -47,4 +47,4 @@ module hdu
         end
     end
 
-endmodule: hdu
+endmodule: fu

@@ -29,13 +29,9 @@ module ex_stage
     logic signed [DATA_WIDTH-1:0] opr_b;
     logic signed [DATA_WIDTH-1:0] opr_res;
 
-    // second operand selection
-    assign opr_a = (ex_stage_in.opr_a_sel) ? ex_stage_in.pc  : ex_stage_in.opr_a;
-    assign opr_b = (ex_stage_in.opr_b_sel) ? ex_stage_in.imm : ex_stage_in.opr_b;
-
-    // hazard detection unit
-    hdu # (
-    ) i_hdu (
+    // forwarding unit
+    fu # (
+    ) i_fu (
         .rs1          (ex_stage_in.rs1          ),
         .rs2          (ex_stage_in.rs2          ),
         .rf_en_frm_mem(ex_stage_in_frm_mem.rf_en),
@@ -50,25 +46,29 @@ module ex_stage
     always_comb
     begin
         case(for_a)
-            2'b00:   for_opr_a = opr_a;
+            2'b00:   for_opr_a = ex_stage_in.opr_a;
             2'b01:   for_opr_a = ex_stage_in_frm_mem.opr_res;
             2'b10:   for_opr_a = ex_stage_in_frm_wb.lsu_rdata;
             default: for_opr_a = 'b0;
         endcase
         case(for_b)
-            2'b00:   for_opr_b = opr_b;
+            2'b00:   for_opr_b = ex_stage_in.opr_b;
             2'b01:   for_opr_b = ex_stage_in_frm_mem.opr_res;
             2'b10:   for_opr_b = ex_stage_in_frm_wb.lsu_rdata;
             default: for_opr_b = 'b0;
         endcase
     end
 
+    // second operand selection
+    assign opr_a = (ex_stage_in.opr_a_sel) ? ex_stage_in.pc  : for_opr_a;
+    assign opr_b = (ex_stage_in.opr_b_sel) ? ex_stage_in.imm : for_opr_b;
+
     alu # (
         .DATA_WIDTH (DATA_WIDTH       )
     ) i_alu (
         .aluop      (ex_stage_in.aluop),
-        .opr_a      (for_opr_a        ),
-        .opr_b      (for_opr_b        ),
+        .opr_a      (opr_a            ),
+        .opr_b      (opr_b            ),
         .opr_result (opr_res          )
     );
 
