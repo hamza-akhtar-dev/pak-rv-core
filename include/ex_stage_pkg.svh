@@ -35,9 +35,17 @@
 
         typedef struct packed
         {
-            logic [ 4:0] rd_frm_mem;
-            logic [31:0] opr_res_frm_mem;
+            logic        rf_en;
+            logic [ 4:0] rd;
+            logic [31:0] opr_res;
         } ex_stage_in_frm_mem_t;
+
+        typedef struct packed
+        {
+            logic        rf_en;
+            logic [ 4:0] rd;
+            logic [31:0] lsu_rdata;
+        } ex_stage_in_frm_wb_t;
 
         typedef struct packed
         {

@@ -6,6 +6,7 @@
 module ex_stage
     import ex_stage_pkg::ex_stage_in_t;
     import ex_stage_pkg::ex_stage_in_frm_mem_t;
+    import ex_stage_pkg::ex_stage_in_frm_wb_t;
     import ex_stage_pkg::ex_stage_out_t;
     import ex_stage_pkg::ex_cfu_out_t;
     import alu_pkg     ::aluop_t;
@@ -14,12 +15,13 @@ module ex_stage
 ) (
     input  ex_stage_in_t         ex_stage_in,
     input  ex_stage_in_frm_mem_t ex_stage_in_frm_mem,
+    input  ex_stage_in_frm_wb_t  ex_stage_in_frm_wb,
     output ex_stage_out_t        ex_stage_out,
     output ex_cfu_out_t          ex_cfu_out
 );
 
-    logic is_for_opr_a;
-    logic is_for_opr_b;
+    logic [1:0] for_a;
+    logic [1:0] for_b;
 
     logic signed [DATA_WIDTH-1:0] for_opr_a;
     logic signed [DATA_WIDTH-1:0] for_opr_b;
@@ -27,17 +29,39 @@ module ex_stage
     logic signed [DATA_WIDTH-1:0] opr_b;
     logic signed [DATA_WIDTH-1:0] opr_res;
 
-    // forwarding conditioning
-    assign is_for_opr_a = (ex_stage_in_frm_mem.rd_frm_mem == ex_stage_in.rs1) ? 1'b1 : 1'b0;
-    assign is_for_opr_b = (ex_stage_in_frm_mem.rd_frm_mem == ex_stage_in.rs2) ? 1'b1 : 1'b0;
-
     // second operand selection
     assign opr_a = (ex_stage_in.opr_a_sel) ? ex_stage_in.pc  : ex_stage_in.opr_a;
     assign opr_b = (ex_stage_in.opr_b_sel) ? ex_stage_in.imm : ex_stage_in.opr_b;
 
+    // hazard detection unit
+    hdu # (
+    ) i_hdu (
+        .rs1          (ex_stage_in.rs1          ),
+        .rs2          (ex_stage_in.rs2          ),
+        .rf_en_frm_mem(ex_stage_in_frm_mem.rf_en),
+        .rd_frm_mem   (ex_stage_in_frm_mem.rd   ),
+        .rf_en_frm_wb (ex_stage_in_frm_wb.rf_en ),
+        .rd_frm_wb    (ex_stage_in_frm_wb.rd    ),
+        .for_a        (for_a                    ),
+        .for_b        (for_b                    )
+    );
+
     // forwarding the operands
-    assign for_opr_a = is_for_opr_a ? ex_stage_in_frm_mem.opr_res_frm_mem : opr_a;
-    assign for_opr_b = is_for_opr_b ? ex_stage_in_frm_mem.opr_res_frm_mem : opr_b;
+    always_comb
+    begin
+        case(for_a)
+            2'b00:   for_opr_a = opr_a;
+            2'b01:   for_opr_a = ex_stage_in_frm_mem.opr_res;
+            2'b10:   for_opr_a = ex_stage_in_frm_wb.lsu_rdata;
+            default: for_opr_a = 'b0;
+        endcase
+        case(for_b)
+            2'b00:   for_opr_b = opr_b;
+            2'b01:   for_opr_b = ex_stage_in_frm_mem.opr_res;
+            2'b10:   for_opr_b = ex_stage_in_frm_wb.lsu_rdata;
+            default: for_opr_b = 'b0;
+        endcase
+    end
 
     alu # (
         .DATA_WIDTH (DATA_WIDTH       )

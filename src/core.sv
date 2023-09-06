@@ -20,6 +20,7 @@ module core
 
     import ex_stage_pkg ::ex_cfu_out_t;
     import ex_stage_pkg ::ex_stage_in_frm_mem_t;
+    import ex_stage_pkg ::ex_stage_in_frm_wb_t;
 # (
     parameter  DATA_WIDTH    = 32,
     parameter  IMEM_SZ_IN_KB = 1,
@@ -47,6 +48,7 @@ module core
     // combinational connection signals
     ex_cfu_out_t          ex_cfu_out;
     ex_stage_in_frm_mem_t ex_stage_in_frm_mem;
+    ex_stage_in_frm_wb_t  ex_stage_in_frm_wb;
 
     // stage instantiations
     if_stage # (
@@ -74,6 +76,7 @@ module core
     ) i_ex_stage (
         .ex_stage_in        (ex_stage_in        ),
         .ex_stage_in_frm_mem(ex_stage_in_frm_mem),
+        .ex_stage_in_frm_wb (ex_stage_in_frm_wb ),
         .ex_stage_out       (ex_stage_out       ),
         .ex_cfu_out         (ex_cfu_out         )
     );
@@ -97,9 +100,13 @@ module core
     // combinational connections
     always_comb
     begin
-        if_stage_in                         = ex_cfu_out;
-        ex_stage_in_frm_mem.rd_frm_mem      = mem_stage_in.rd;
-        ex_stage_in_frm_mem.opr_res_frm_mem = mem_stage_in.opr_res;
+        if_stage_in                  = ex_cfu_out;
+        ex_stage_in_frm_mem.rf_en    = mem_stage_in.rf_en;
+        ex_stage_in_frm_mem.rd       = mem_stage_in.rd;
+        ex_stage_in_frm_mem.opr_res  = mem_stage_in.opr_res;
+        ex_stage_in_frm_wb.rf_en     = wb_stage_in.rf_en;
+        ex_stage_in_frm_wb.rd        = wb_stage_in.rd;
+        ex_stage_in_frm_wb.lsu_rdata = wb_stage_in.lsu_rdata;
     end
 
     // pipeline registers
