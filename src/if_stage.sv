@@ -33,10 +33,11 @@ module if_stage
     pc # (
         .PC_SIZE(PC_SIZE)
     ) i_pc (
-        .clk    (clk    ),
-        .arst_n (arst_n ),
-        .pc_in  (pc_in  ),
-        .pc_out (pc_out )
+        .clk    (clk               ),
+        .arst_n (arst_n            ),
+        .en_in  (~if_stage_in.stall),
+        .pc_in  (pc_in             ),
+        .pc_out (pc_out            )
     );
 
     // asychronous instruction read

@@ -21,6 +21,12 @@
             logic [31:0] pc4;
         } id_stage_in_t;
 
+        typedef struct packed
+        {
+            logic [4:0] rd;
+            logic [1:0] wb_sel;
+        } id_stage_in_frm_ex_t;
+
         typedef struct packed 
         {
             logic [ 4:0] rs1;
@@ -41,6 +47,12 @@
             logic        opr_b_sel;
             logic [ 1:0] wb_sel;
         } id_stage_out_t;
+
+        typedef struct packed
+        {
+            logic stall;
+            logic flush;
+        } id_hdu_out_t;
 
         function automatic logic[31:0] gen_imm_f 
         (
