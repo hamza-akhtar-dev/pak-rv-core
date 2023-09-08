@@ -5,17 +5,21 @@
 
 module id_stage
     import id_stage_pkg::id_stage_in_t;
+    import id_stage_pkg::id_stage_in_frm_ex_t;
     import id_stage_pkg::id_stage_out_t;
+    import id_stage_pkg::id_hdu_out_t;
     import wb_stage_pkg::wb_stage_out_t;
     import id_stage_pkg::gen_imm_f;
 # (
     parameter DATA_WIDTH = 32
 ) (
-    input  logic          clk,
-    input  logic          arst_n,
-    input  wb_stage_out_t wb_in, // writeback interface
-    input  id_stage_in_t  id_stage_in,
-    output id_stage_out_t id_stage_out
+    input  logic                clk,
+    input  logic                arst_n,
+    input  wb_stage_out_t       wb_in, // writeback interface
+    input  id_stage_in_t        id_stage_in,
+    input  id_stage_in_frm_ex_t id_stage_in_frm_ex,
+    output id_stage_out_t       id_stage_out,
+    output id_hdu_out_t         id_hdu_out
 );
     logic [4:0] rs1;
     logic [4:0] rs2;
@@ -61,6 +65,16 @@ module id_stage
         .opr_a_sel   (id_stage_out.opr_a_sel),
         .opr_b_sel   (id_stage_out.opr_b_sel),
         .wb_sel      (id_stage_out.wb_sel   )
+    );
+
+    hdu #(
+    ) i_hdu (
+        .rs1           (rs1                      ),
+        .rs2           (rs2                      ),
+        .rd_frm_ex     (id_stage_in_frm_ex.rd    ),
+        .wb_sel_frm_ex (id_stage_in_frm_ex.wb_sel),
+        .stall         (id_hdu_out.stall         ),
+        .flush         (id_hdu_out.flush         )
     );
 
     assign id_stage_out.rd  = id_stage_in.inst[11:7];

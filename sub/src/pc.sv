@@ -6,6 +6,7 @@ module pc
 ) (
     input  logic               clk,
     input  logic               arst_n,
+    input  logic               en_in,
     input  logic [PC_SIZE-1:0] pc_in,
     output logic [PC_SIZE-1:0] pc_out
 );
@@ -16,7 +17,7 @@ module pc
         begin
             pc_out <= 0;
         end
-        else
+        else if(en_in)
         begin
             pc_out <= pc_in;
         end

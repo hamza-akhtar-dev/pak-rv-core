@@ -83,7 +83,7 @@ module ex_stage
 
     // propagate signals to next stage
     assign ex_stage_out.opr_res = opr_res;
-    assign ex_stage_out.opr_b   = ex_stage_in.opr_b;
+    assign ex_stage_out.opr_b   = for_opr_b;
     assign ex_stage_out.rd      = ex_stage_in.rd;
     assign ex_stage_out.pc4     = ex_stage_in.pc4;
     assign ex_stage_out.rf_en   = ex_stage_in.rf_en;
