@@ -106,17 +106,17 @@ module core
     // combinational connections
     always_comb
     begin
-        if_stage_in.br_taken         = ex_cfu_out.br_taken;
-        if_stage_in.br_target        = ex_cfu_out.br_target;
-        if_stage_in.stall            = id_hdu_out.stall;
-        ex_stage_in_frm_mem.rf_en    = mem_stage_in.rf_en;
-        ex_stage_in_frm_mem.rd       = mem_stage_in.rd;
-        ex_stage_in_frm_mem.opr_res  = mem_stage_in.opr_res;
-        ex_stage_in_frm_wb.rf_en     = wb_stage_in.rf_en;
-        ex_stage_in_frm_wb.rd        = wb_stage_in.rd;
-        ex_stage_in_frm_wb.lsu_rdata = wb_stage_in.lsu_rdata;
-        id_stage_in_frm_ex.rd        = ex_stage_in.rd;
-        id_stage_in_frm_ex.wb_sel    = ex_stage_in.wb_sel;
+        if_stage_in.br_taken        = ex_cfu_out.br_taken;
+        if_stage_in.br_target       = ex_cfu_out.br_target;
+        if_stage_in.stall           = id_hdu_out.stall;
+        ex_stage_in_frm_mem.rf_en   = mem_stage_in.rf_en;
+        ex_stage_in_frm_mem.rd      = mem_stage_in.rd;
+        ex_stage_in_frm_mem.opr_res = mem_stage_in.opr_res;
+        ex_stage_in_frm_wb.rf_en    = wb_stage_in.rf_en;
+        ex_stage_in_frm_wb.rd       = wb_stage_in.rd;
+        ex_stage_in_frm_wb.wb_data  = wb_stage_out.wb_data;
+        id_stage_in_frm_ex.rd       = ex_stage_in.rd;
+        id_stage_in_frm_ex.wb_sel   = ex_stage_in.wb_sel;
     end
 
     // if -> id
