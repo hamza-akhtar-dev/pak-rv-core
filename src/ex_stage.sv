@@ -48,13 +48,13 @@ module ex_stage
         case(for_a)
             2'b00:   for_opr_a = ex_stage_in.opr_a;
             2'b01:   for_opr_a = ex_stage_in_frm_mem.opr_res;
-            2'b10:   for_opr_a = ex_stage_in_frm_wb.lsu_rdata;
+            2'b10:   for_opr_a = ex_stage_in_frm_wb.wb_data;
             default: for_opr_a = 'b0;
         endcase
         case(for_b)
             2'b00:   for_opr_b = ex_stage_in.opr_b;
             2'b01:   for_opr_b = ex_stage_in_frm_mem.opr_res;
-            2'b10:   for_opr_b = ex_stage_in_frm_wb.lsu_rdata;
+            2'b10:   for_opr_b = ex_stage_in_frm_wb.wb_data;
             default: for_opr_b = 'b0;
         endcase
     end

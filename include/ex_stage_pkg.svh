@@ -44,7 +44,7 @@
         {
             logic        rf_en;
             logic [ 4:0] rd;
-            logic [31:0] lsu_rdata;
+            logic [31:0] wb_data;
         } ex_stage_in_frm_wb_t;
 
         typedef struct packed
