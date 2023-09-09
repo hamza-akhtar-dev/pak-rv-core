@@ -122,7 +122,7 @@ module core
     // if -> id
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n) 
+        if (~arst_n | ex_cfu_out.br_taken) 
         begin
             id_stage_in  <= '0;
         end
@@ -135,7 +135,7 @@ module core
     // id -> ex
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | id_hdu_out.flush) 
+        if (~arst_n | id_hdu_out.flush | ex_cfu_out.br_taken) 
         begin
             ex_stage_in  <= '0;
         end
