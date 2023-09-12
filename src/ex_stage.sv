@@ -76,8 +76,8 @@ module ex_stage
         .DATA_WIDTH(DATA_WIDTH         )
     ) i_cfu (
         .cfuop     (ex_stage_in.cfuop  ),
-        .opr_a     (ex_stage_in.opr_a  ),
-        .opr_b     (ex_stage_in.opr_b  ),
+        .opr_a     (for_opr_a          ),
+        .opr_b     (for_opr_b          ),
         .br_taken  (ex_cfu_out.br_taken)
     );
 
