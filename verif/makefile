@@ -27,7 +27,7 @@ SRCS_SUB = $(patsubst %,$(SUB_SRC_DIR)/%,$(_SRCS_SUB))
 
 # debug/trace settings
 ifeq ($(DEBUG), on)
-	SETTINGS = --trace --trace-structs --debug --gdbbt
+	SETTINGS = --trace --trace-structs --debug --gdbbt --timing
 endif
 
 # cocotb variables

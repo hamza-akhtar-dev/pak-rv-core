@@ -29,7 +29,7 @@ module mem_stage
         .arst_n        (arst_n            ),
         .write_en      (mem_stage_in.dm_en),
         .mask          (mask              ),
-        .addr          (dmem_addr_in[9:0] ),  // TODO: make this parameterizable
+        .addr          (dmem_addr_in      ),  // TODO: make this parameterizable
         .data_in       (dmem_data_in      ),
         .data_out      (dmem_rdata        )
     );

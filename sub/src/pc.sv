@@ -15,7 +15,7 @@ module pc
     begin
         if(~arst_n)
         begin
-            pc_out <= 0;
+            pc_out <= 32'h8000_0000;
         end
         else if(en_in)
         begin
