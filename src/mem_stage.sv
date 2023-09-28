@@ -48,7 +48,7 @@ module mem_stage
         .addr_out   (dmem_addr_in           ),
         .data_s_in  (mem_stage_in.opr_b     ),
         .data_s_out (dmem_data_in           ),
-        .data_l_in  (main_mem_data_out      ),
+        .data_l_in  (dmem_rdata             ),
         .data_l_out (/*mem_stage_out.lsu_rdata*/),
         .mask       (mask                   )
     );
