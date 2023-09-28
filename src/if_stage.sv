@@ -13,19 +13,21 @@ module if_stage
     input  logic          clk,
     input  logic          arst_n,
     input  if_stage_in_t  if_stage_in,
-    output if_stage_out_t if_stage_out
+    output if_stage_out_t if_stage_out,
+    output logic [DATA_WIDTH-1:0] pc_out,
+    output logic [DATA_WIDTH-1:0] pc4
 );
 
-    logic [DATA_WIDTH-1:0] instruction_memory [28'h2000000];
+    logic [DATA_WIDTH-1:0] instruction_memory [51];
 
     logic [   PC_SIZE-1:0] pc_in;
-    logic [   PC_SIZE-1:0] pc_out;
-    logic [   PC_SIZE-1:0] pc4;
+    // logic [   PC_SIZE-1:0] pc_out;
+    // logic [   PC_SIZE-1:0] pc4;
 
     `ifndef COMPLIANCE
         initial
         begin
-            $readmemh("../verif/gen_machine_codes/machine_code.mem", instruction_memory);
+            $readmemh("../verif/gen_machine_codes/build/machine_code.mem", instruction_memory);
         end
     `endif
     
@@ -43,9 +45,9 @@ module if_stage
     );
 
     // asychronous instruction read
-    assign if_stage_out.inst = instruction_memory[pc_out[PC_SIZE-1:2]];
+    // assign if_stage_out.inst = instruction_memory[pc_out[PC_SIZE-1:2]];
 
-    assign if_stage_out.pc   = pc_out;
-    assign if_stage_out.pc4  = pc4;
+    // assign if_stage_out.pc   = pc_out;
+    // assign if_stage_out.pc4  = pc4;
 
 endmodule

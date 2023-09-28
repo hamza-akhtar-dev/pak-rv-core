@@ -13,13 +13,19 @@ module mem_stage
     input logic            clk,
     input logic            arst_n,
     input  mem_stage_in_t  mem_stage_in,
-    output mem_stage_out_t mem_stage_out
+    output mem_stage_out_t mem_stage_out,
+    output logic [DATA_WIDTH-1:0] mem_data_in,
+    output logic [DATA_WIDTH-1:0] mem_addr_in,
+    output logic [3:0]     mask
 );
 
     logic [DATA_WIDTH-1:0] dmem_addr_in;
     logic [DATA_WIDTH-1:0] dmem_data_in;
     logic [DATA_WIDTH-1:0] dmem_rdata;
-    logic [MASK_SIZE-1:0]  mask;
+    // logic [MASK_SIZE-1:0]  mask;
+
+    assign mem_data_in = dmem_data_in;
+    assign mem_addr_in = dmem_addr_in;
 
     dmem # (
         .DATA_WIDTH    (DATA_WIDTH        ),
@@ -42,15 +48,15 @@ module mem_stage
         .addr_out   (dmem_addr_in           ),
         .data_s_in  (mem_stage_in.opr_b     ),
         .data_s_out (dmem_data_in           ),
-        .data_l_in  (dmem_rdata             ),
-        .data_l_out (mem_stage_out.lsu_rdata),
+        .data_l_in  (main_mem_data_out      ),
+        .data_l_out (/*mem_stage_out.lsu_rdata*/),
         .mask       (mask                   )
     );
 
-    assign mem_stage_out.opr_res = mem_stage_in.opr_res;
-    assign mem_stage_out.rd      = mem_stage_in.rd;
-    assign mem_stage_out.pc4     = mem_stage_in.pc4;
-    assign mem_stage_out.rf_en   = mem_stage_in.rf_en;
-    assign mem_stage_out.wb_sel  = mem_stage_in.wb_sel;
+    // assign mem_stage_out.opr_res = mem_stage_in.opr_res;
+    // assign mem_stage_out.rd      = mem_stage_in.rd;
+    // assign mem_stage_out.pc4     = mem_stage_in.pc4;
+    // assign mem_stage_out.rf_en   = mem_stage_in.rf_en;
+    // assign mem_stage_out.wb_sel  = mem_stage_in.wb_sel;
 
 endmodule: mem_stage

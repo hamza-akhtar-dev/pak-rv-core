@@ -57,7 +57,7 @@ class pakrv(pluginTemplate):
        self.buidldir = 'verilator_work'
        comp_pakrv = 'verilator --Mdir {0} +define+COMPLIANCE=1 -cc \
         ../src/*.sv ../sub/src/*.sv src/{1}.sv                     \
-        -Wno-TIMESCALEMOD -Wno-WIDTHTRUNC\
+        -Wno-TIMESCALEMOD -Wno-WIDTHTRUNC                          \
         -I../include/ -I../sub/include/ --top-module {1}           \
         --exe src/{1}.cpp --trace --trace-structs --timing'.format(self.buidldir, self.toplevel)
        utils.shellCommand(comp_pakrv).run()
@@ -66,8 +66,8 @@ class pakrv(pluginTemplate):
 
        # Simulate
        self.sim_pakrv = './{0}/V{1} \
-        +max_cycles=100000000 \
-        +imem={2}/{3}.hex'
+        +imem={2}/{3}.hex           \
+        +time_out=100000000'
 
     def build(self, isa_yaml, platform_yaml):
 
