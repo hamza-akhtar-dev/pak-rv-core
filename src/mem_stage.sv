@@ -10,10 +10,12 @@ module mem_stage
     parameter DMEM_SZ_IN_KB = 1,
     localparam MASK_SIZE    = DATA_WIDTH/8
 ) (
-    input logic            clk,
-    input logic            arst_n,
-    input  mem_stage_in_t  mem_stage_in,
-    output mem_stage_out_t mem_stage_out,
+    input logic                   clk,
+    input logic                   arst_n,
+    input  mem_stage_in_t         mem_stage_in,
+    output mem_stage_out_t        mem_stage_out,
+    input  logic [DATA_WIDTH-1:0] mem_data_out,
+    output logic [DATA_WIDTH-1:0] lsu_data_out,
     output logic [DATA_WIDTH-1:0] mem_data_in,
     output logic [DATA_WIDTH-1:0] mem_addr_in,
     output logic [3:0]     mask
@@ -22,10 +24,6 @@ module mem_stage
     logic [DATA_WIDTH-1:0] dmem_addr_in;
     logic [DATA_WIDTH-1:0] dmem_data_in;
     logic [DATA_WIDTH-1:0] dmem_rdata;
-    // logic [MASK_SIZE-1:0]  mask;
-
-    assign mem_data_in = dmem_data_in;
-    assign mem_addr_in = dmem_addr_in;
 
     dmem # (
         .DATA_WIDTH    (DATA_WIDTH        ),
@@ -45,11 +43,11 @@ module mem_stage
     ) i_lsu (
         .lsuop      (mem_stage_in.lsuop     ),
         .addr_in    (mem_stage_in.opr_res   ),
-        .addr_out   (dmem_addr_in           ),
+        .addr_out   (mem_addr_in            ),
         .data_s_in  (mem_stage_in.opr_b     ),
-        .data_s_out (dmem_data_in           ),
-        .data_l_in  (dmem_rdata             ),
-        .data_l_out (/*mem_stage_out.lsu_rdata*/),
+        .data_s_out (mem_data_in            ),
+        .data_l_in  (mem_data_out           ),
+        .data_l_out (lsu_data_out           ),
         .mask       (mask                   )
     );
 

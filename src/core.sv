@@ -105,6 +105,7 @@ module core
     );
 
     logic [3:0] mask;
+    logic [DATA_WIDTH-1:0] lsu_data_out;
 
     mem_stage #(
         .DATA_WIDTH   (DATA_WIDTH   ),
@@ -114,6 +115,8 @@ module core
         .arst_n       (arst_n       ),
         .mem_stage_in (mem_stage_in ),
         .mem_stage_out(             ),
+        .mem_data_out (mem_data_out ),
+        .lsu_data_out (lsu_data_out ),
         .mask         (mask         ),
         .mem_data_in  (mem_data_in  ),
         .mem_addr_in  (mem_addr_in  )
@@ -128,7 +131,7 @@ module core
     assign mem_we_in   = mem_stage_in.dm_en;
     assign mem_mask_in = mask;
 
-    assign mem_stage_out.lsu_rdata = mem_data_out;
+    assign mem_stage_out.lsu_rdata = lsu_data_out;
     assign mem_stage_out.opr_res = mem_stage_in.opr_res;
     assign mem_stage_out.rd      = mem_stage_in.rd;
     assign mem_stage_out.pc4     = mem_stage_in.pc4;
