@@ -13,22 +13,37 @@ jobs:
       with:
         path: Pak-RV-Core
 
-    - name: Install Verilator, Sail, RISC-OF and Cocotb
+    - name: Install Docker
       run: |
         sudo apt-get install -y python3-setuptools
-        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
-        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
         sudo apt-get update
         sudo apt-get upgrade
+        sudo apt install apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        apt-cache policy docker-ce
+        sudo apt install docker-ce
+        sudo systemctl status docker
+        sudo usermod -aG docker ${USER}
+        su - ${USER}
+        groups
+
+    - name: Install Verilator, Sail, RISC-OF and Cocotb
+      run: |
+        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
+        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
+
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
 
+        docker run -ti verilator/verilator-buildenv
+        docker run -ti verilator/verilator:latest --version
         git clone https://github.com/AhsanAliUet/tools
         cd tools
-        tar -xzvf verilator.tar.gz
+        # tar -xzvf verilator.tar.gz
         tar -xzvf sail_cSim.tar.gz
-        export VERILATOR_ROOT=$(pwd)/verilator
+        # export VERILATOR_ROOT=$(pwd)/verilator
         cd ..
-        echo $GITHUB_WORKSPACE/$(VERILATOR_ROOT)/bin >> $GITHUB_PATH
+        # echo $GITHUB_WORKSPACE/$(VERILATOR_ROOT)/bin >> $GITHUB_PATH
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH
 
         pip3 install cocotb
