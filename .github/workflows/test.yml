@@ -26,8 +26,9 @@ jobs:
         cd tools
         tar -xzvf verilator.tar.gz
         tar -xzvf sail_cSim.tar.gz
+        export VERILATOR_ROOT=$(pwd)/verilator
         cd ..
-        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH
+        echo $GITHUB_WORKSPACE/$(VERILATOR_ROOT)/bin >> $GITHUB_PATH
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH
 
         pip3 install cocotb
