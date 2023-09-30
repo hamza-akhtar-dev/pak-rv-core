@@ -25,7 +25,6 @@ jobs:
         sudo apt install docker-ce
         sudo systemctl status docker
         sudo usermod -aG docker ${USER}
-        su - ${USER}
         groups
 
     - name: Install Verilator, Sail, RISC-OF and Cocotb
