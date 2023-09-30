@@ -1,6 +1,6 @@
 name: Pak-RV-Core
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
 
@@ -31,28 +31,16 @@ jobs:
         sudo apt-get install -y libfl-dev
         sudo apt-get install -y zlib1g zlib1g-dev
         
-        mkdir -p deps
-        cd deps
-        
-        unset VERILATOR_ROOT
-        
-        git clone https://github.com/verilator/verilator
-        cd verilator
-        git checkout v5.012
-        
-        autoconf
-        
-        args=
-        if [ ! -z ${PREFIX} ]; then
-            args=--prefix="$PREFIX"
-        fi
-        
-        ./configure $args
-        make -j$(nproc)
-        sudo make install
-        
-        cd -
+        git clone https://github.com/AhsanAliUet/tools
+        cd tools
+        tar -xzvf verilator.tar.gz
+        tar -xzvf sail_cSim.tar.gz
+        cd ..
+        echo $GITHUB_WORKSPACE/tools/verilator >> $GITHUB_PATH
+        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH
+
         pip3 install cocotb
+        pip3 install git+https://github.com/riscv/riscof.git
 
     - name: Setup toolchain
       run: |
