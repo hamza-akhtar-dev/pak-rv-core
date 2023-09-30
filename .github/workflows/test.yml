@@ -20,17 +20,8 @@ jobs:
         curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
         sudo apt-get update
         sudo apt-get upgrade
-        set -e
+        set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
 
-        # Get directory of script
-        src_path=$(cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P)
-        
-        sudo apt-get install -y git perl python3 make autoconf g++ flex bison ccache
-        sudo apt-get install -y libunwind-dev libgoogle-perftools-dev numactl perl-doc help2man
-        sudo apt-get install -y libfl2
-        sudo apt-get install -y libfl-dev
-        sudo apt-get install -y zlib1g zlib1g-dev
-        
         git clone https://github.com/AhsanAliUet/tools
         cd tools
         tar -xzvf verilator.tar.gz
@@ -50,6 +41,8 @@ jobs:
 
     - name: Run Compliance Verification Framework
       run: |
+        git submodule update --init --recursive
         cd Pak-RV-Core/verif/riscof_compliance
+        ls
         chmod +x run-compliance.sh
         ./run-compliance.sh
