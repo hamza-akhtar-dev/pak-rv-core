@@ -13,7 +13,7 @@ jobs:
       with:
         path: Pak-RV-Core
 
-    - name: Install Verilator, Sail and cocotb
+    - name: Install Verilator, Sail, RISC-OF and Cocotb
       run: |
         sudo apt-get install -y python3-setuptools
         echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
@@ -41,8 +41,9 @@ jobs:
 
     - name: Run Compliance Verification Framework
       run: |
+        cd Pak-RV-Core
         git submodule update --init --recursive
-        cd Pak-RV-Core/verif/riscof_compliance
+        cd verif/riscof_compliance
         ls
         chmod +x run-compliance.sh
         ./run-compliance.sh
