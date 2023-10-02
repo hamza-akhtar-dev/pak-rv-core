@@ -23,9 +23,9 @@ jobs:
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
         cd ..
-        echo $GITHUB_WORKSPACE/tools/bin >> $GITHUB_PATH # add verilator PATH
-        echo $GITHUB_WORKSPACE/tools >> $GITHUB_PATH     # add sail PATH
-        echo $(GITHUB_PATH)
+        echo $GITHUB_WORKSPACE/tools >> $GITHUB_PATH               # add verilator PATH
+        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
+        echo $GITHUB_PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
