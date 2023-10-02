@@ -20,11 +20,11 @@ jobs:
 
         git clone https://github.com/AhsanAliUet/tools
         cd tools
-        tar -xzvf verilator.tar.gz
-        tar -xzvf sail_cSim.tar.gz
+        tar -xzf verilator.tar.gz
+        tar -xzf sail_cSim.tar.gz
         cd ..
-        echo tools/bin >> $GITHUB_PATH
-        echo tools >> $GITHUB_PATH
+        echo $GITHUB_WORKSPACE/tools/bin >> $GITHUB_PATH # add verilator PATH
+        echo $GITHUB_WORKSPACE/tools >> $GITHUB_PATH     # add sail PATH
         echo $(GITHUB_PATH)
 
         pip3 install cocotb
