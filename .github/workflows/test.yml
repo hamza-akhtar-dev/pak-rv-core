@@ -23,10 +23,11 @@ jobs:
         tar -xzvf verilator.tar.gz
         tar -xzvf sail_cSim.tar.gz
         export VERILATOR_ROOT=$(pwd)/verilator
+        export SAIL_ROOT=$(pwd)/sail_cSim
         cd ..
-        echo $GITHUB_WORKSPACE/$(VERILATOR_ROOT)/bin >> $GITHUB_PATH
-        echo $GITHUB_WORKSPACE/$(VERILATOR_ROOT)/include >> $GITHUB_PATH
-        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH
+        echo $(VERILATOR_ROOT)/bin >> $GITHUB_PATH
+        # echo $GITHUB_WORKSPACE/$(VERILATOR_ROOT)/include >> $GITHUB_PATH
+        echo $(SAIL_ROOT) >> $GITHUB_PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
