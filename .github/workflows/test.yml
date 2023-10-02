@@ -19,10 +19,9 @@ jobs:
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
 
         git clone https://github.com/AhsanAliUet/tools
-        cd tools
+        cd $GITHUB_WORKSPACE/tools
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
-        cd ..
         echo $GITHUB_WORKSPACE/tools >> $GITHUB_PATH               # add verilator PATH
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
         echo $GITHUB_PATH
