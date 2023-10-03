@@ -22,18 +22,21 @@ jobs:
         cd $GITHUB_WORKSPACE/tools
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
-        echo $GITHUB_WORKSPACE/tools >> $GITHUB_PATH               # add verilator PATH
+        tar -xzf riscv-32-gnu-toolchain.tar.gz
+
+        echo $GITHUB_WORKSPACE/tools/verilator >> $GITHUB_PATH     # add verilator PATH
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
-        echo $GITHUB_PATH
+        echo $GITHUB_WORKSPACE/tools/riscv-32-gnu-toolchain >> $GITHUB_PATH     # add toolchain in PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
 
-    - name: Setup RISC-V GNU toolchain
-      run: |
-        wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-4.0.0/riscv32-unknown-elf.gcc-12.1.0.tar.gz
-        tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
-        echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
+    # - name: Setup RISC-V GNU toolchain
+    #   run: |
+        
+    #     wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-4.0.0/riscv32-unknown-elf.gcc-12.1.0.tar.gz
+    #     tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
+    #     echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
     - name: Run Compliance Verification Framework
       run: |
