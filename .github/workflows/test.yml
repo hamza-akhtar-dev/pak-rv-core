@@ -42,7 +42,6 @@ jobs:
       run: |
         cd ..
         pwd
-        cd pak-rv-core
         git submodule update --init --recursive
         cd verif/riscof_compliance
         chmod +x ./run-compliance.sh
