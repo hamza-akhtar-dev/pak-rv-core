@@ -40,8 +40,7 @@ jobs:
 
     - name: Run Compliance Verification Framework
       run: |
-        cd ..
-        pwd
+        cd Pak-RV-Core
         git submodule update --init --recursive
         cd verif/riscof_compliance
         chmod +x ./run-compliance.sh
