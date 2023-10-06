@@ -15,29 +15,26 @@ jobs:
 
     - name: Install Verilator, Sail, RISC-OF and Cocotb
       run: |
-
+        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
+        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
+        sudo apt update
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
         sudo apt install verilator
         git clone https://github.com/AhsanAliUet/tools
         cd $GITHUB_WORKSPACE/tools
-        # tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
-        tar -xzf riscv-32-gnu-toolchain.tar.gz
 
-        # echo $GITHUB_WORKSPACE/tools/verilator >> $GITHUB_PATH     # add verilator PATH
-        # echo $GITHUB_WORKSPACE/tools/verilator/include >> $GITHUB_PATH     # add verilator PATH
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
-        echo $GITHUB_WORKSPACE/tools/riscv-32-gnu-toolchain >> $GITHUB_PATH     # add toolchain in PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
 
-    # - name: Setup RISC-V GNU toolchain
-    #   run: |
+    - name: Setup RISC-V GNU toolchain
+      run: |
         
-    #     wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-4.0.0/riscv32-unknown-elf.gcc-12.1.0.tar.gz
-    #     tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
-    #     echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
+        wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-4.0.0/riscv32-unknown-elf.gcc-12.1.0.tar.gz
+        tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
+        echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
     - name: Run Compliance Verification Framework
       run: |
