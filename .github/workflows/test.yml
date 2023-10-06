@@ -17,14 +17,15 @@ jobs:
       run: |
 
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
-
+        sudo apt install verilator
         git clone https://github.com/AhsanAliUet/tools
         cd $GITHUB_WORKSPACE/tools
-        tar -xzf verilator.tar.gz
+        # tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
         tar -xzf riscv-32-gnu-toolchain.tar.gz
 
-        echo $GITHUB_WORKSPACE/tools/verilator >> $GITHUB_PATH     # add verilator PATH
+        # echo $GITHUB_WORKSPACE/tools/verilator >> $GITHUB_PATH     # add verilator PATH
+        # echo $GITHUB_WORKSPACE/tools/verilator/include >> $GITHUB_PATH     # add verilator PATH
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
         echo $GITHUB_WORKSPACE/tools/riscv-32-gnu-toolchain >> $GITHUB_PATH     # add toolchain in PATH
 
