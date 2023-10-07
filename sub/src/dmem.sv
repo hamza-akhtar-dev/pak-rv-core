@@ -17,22 +17,18 @@ module dmem
 );
     logic [DATA_WIDTH-1:0] data_memory [2**ADDR_WIDTH];
     integer write_sig;
-    integer debug;
+
     assign data_out = data_memory[addr[ADDR_WIDTH-1:2]];
 
-    initial
+    always @ (posedge clk)
     begin
-        forever
+        if (write_en && addr == 32'h8E00_0000)
         begin
-            @(posedge clk);
-            if (write_en && addr == 32'h8E00_0000)
-            begin
-                $fwrite(write_sig, "%h\n", data_in);
-            end
-            if (write_en && addr == 32'h8F00_0000)
-            begin
-                $finish;
-            end
+            $fwrite(write_sig, "%h\n", data_in);
+        end
+        if (write_en && addr == 32'h8F00_0000)
+        begin
+            $finish;
         end
     end
 
@@ -60,11 +56,5 @@ module dmem
             if (mask[3]) data_memory[addr[ADDR_WIDTH-1:2]][31:24] <= data_in[31:24];
         end
     end
-
-    // for debugging purpose
-    // final
-    // begin
-    //     $writememh("dmem.mem", data_memory, 32'h8000_0000, 32'h8000_0100);
-    // end
 
 endmodule: dmem
