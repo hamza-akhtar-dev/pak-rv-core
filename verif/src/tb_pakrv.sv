@@ -30,7 +30,7 @@ module tb_pakrv (
     begin
         for (int i = 0; i < time_out; i++)
         begin
-            @(posedge clk);
+            #10;
         end
         $finish;
     end
