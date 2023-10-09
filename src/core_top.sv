@@ -18,17 +18,17 @@ module core_top # (
     logic [DATA_WIDTH-1:0] instruction;
 
     core # (
-        .DATA_WIDTH   (DATA_WIDTH  )
+        .DATA_WIDTH           (DATA_WIDTH  )
     ) i_core (
-        .clk          (clk         ),
-        .arst_n       (arst_n      ),
-        .pc           (pc          ),
-        .inst_in      (instruction ),
-        .mem_data_out (mem_data_out),
-        .mem_addr_in  (mem_addr_in ),
-        .mem_data_in  (mem_data_in ),
-        .mem_we_in    (mem_we_in   ),
-        .mem_mask_in  (mem_mask_in )
+        .clk                  (clk         ),
+        .arst_n               (arst_n      ),
+        .pc                   (pc          ),
+        .inst_in              (instruction ),
+        .core_in_mem_data_out (mem_data_out),
+        .core_out_mem_addr_in (mem_addr_in ),
+        .core_out_mem_data_in (mem_data_in ),
+        .core_out_mem_we_in   (mem_we_in   ),
+        .core_out_mem_mask_in (mem_mask_in )
     );
 
     mem # (

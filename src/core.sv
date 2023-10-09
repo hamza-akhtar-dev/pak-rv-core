@@ -28,17 +28,17 @@ module core
     parameter  IMEM_SZ_IN_KB = 1,
     parameter  DMEM_SZ_IN_KB = 1
 ) (
-    input  logic clk,
-    input  logic arst_n,
-    output logic [DATA_WIDTH-1:0] pc,
-    input  logic [DATA_WIDTH-1:0] inst_in,
+    input  logic                    clk,
+    input  logic                    arst_n,
+    output logic [DATA_WIDTH-1:0]   pc,
+    input  logic [DATA_WIDTH-1:0]   inst_in,
 
     // data memory related ports
-    input  logic [DATA_WIDTH-1:0] mem_data_out,
-    output logic [DATA_WIDTH-1:0] mem_addr_in,
-    output logic [DATA_WIDTH-1:0] mem_data_in,
-    output logic                  mem_we_in,
-    output logic [3:0]            mem_mask_in
+    input  logic [DATA_WIDTH-1:0]   core_in_mem_data_out,
+    output logic [DATA_WIDTH-1:0]   core_out_mem_addr_in,
+    output logic [DATA_WIDTH-1:0]   core_out_mem_data_in,
+    output logic                    core_out_mem_we_in,
+    output logic [DATA_WIDTH/8-1:0] core_out_mem_mask_in
 );
     // stage signals
     if_stage_in_t  if_stage_in;
@@ -65,6 +65,10 @@ module core
 
     logic [DATA_WIDTH-1:0] pc4;
 
+    // external memory related connections
+    logic [3:0]            mem_mask;
+    logic [DATA_WIDTH-1:0] lsu_data_out;
+
     // stage instantiations
     if_stage # (
         .DATA_WIDTH    (DATA_WIDTH   ),
@@ -83,7 +87,7 @@ module core
     assign if_stage_out.pc4  = pc4;
 
     id_stage #(
-        .DATA_WIDTH  (DATA_WIDTH  )
+        .DATA_WIDTH        (DATA_WIDTH        )
     ) i_id_stage (
         .clk               (clk               ),
         .arst_n            (arst_n            ),
@@ -95,7 +99,7 @@ module core
     );
 
     ex_stage #(
-        .DATA_WIDTH  (DATA_WIDTH  )
+        .DATA_WIDTH         (DATA_WIDTH         )
     ) i_ex_stage (
         .ex_stage_in        (ex_stage_in        ),
         .ex_stage_in_frm_mem(ex_stage_in_frm_mem),
@@ -104,22 +108,19 @@ module core
         .ex_cfu_out         (ex_cfu_out         )
     );
 
-    logic [3:0] mask;
-    logic [DATA_WIDTH-1:0] lsu_data_out;
-
     mem_stage #(
-        .DATA_WIDTH   (DATA_WIDTH   ),
-        .DMEM_SZ_IN_KB(DMEM_SZ_IN_KB)
+        .DATA_WIDTH   (DATA_WIDTH           ),
+        .DMEM_SZ_IN_KB(DMEM_SZ_IN_KB        )
     ) i_mem_stage (
-        .clk          (clk          ),
-        .arst_n       (arst_n       ),
-        .mem_stage_in (mem_stage_in ),
-        .mem_stage_out(             ),
-        .mem_data_out (mem_data_out ),
-        .lsu_data_out (lsu_data_out ),
-        .mask         (mask         ),
-        .mem_data_in  (mem_data_in  ),
-        .mem_addr_in  (mem_addr_in  )
+        .clk          (clk                  ),
+        .arst_n       (arst_n               ),
+        .mem_stage_in (mem_stage_in         ),
+        .mem_stage_out(mem_stage_out        ),
+        .mem_data_out (core_in_mem_data_out ),
+        .lsu_data_out (lsu_data_out         ),
+        .mask         (mem_mask             ),
+        .mem_data_in  (core_out_mem_data_in ),
+        .mem_addr_in  (core_out_mem_addr_in )
     );
 
     wb_stage #(
@@ -128,15 +129,8 @@ module core
         .wb_stage_out (wb_stage_out )
     );
 
-    assign mem_we_in   = mem_stage_in.dm_en;
-    assign mem_mask_in = mask;
-
-    assign mem_stage_out.lsu_rdata = lsu_data_out;
-    assign mem_stage_out.opr_res = mem_stage_in.opr_res;
-    assign mem_stage_out.rd      = mem_stage_in.rd;
-    assign mem_stage_out.pc4     = mem_stage_in.pc4;
-    assign mem_stage_out.rf_en   = mem_stage_in.rf_en;
-    assign mem_stage_out.wb_sel  = mem_stage_in.wb_sel;
+    assign core_out_mem_we_in   = mem_stage_in.dm_en;
+    assign core_out_mem_mask_in = mem_mask;
 
     // combinational connections
     always_comb

@@ -10,15 +10,15 @@ module mem_stage
     parameter DMEM_SZ_IN_KB = 1,
     localparam MASK_SIZE    = DATA_WIDTH/8
 ) (
-    input logic                   clk,
-    input logic                   arst_n,
-    input  mem_stage_in_t         mem_stage_in,
-    output mem_stage_out_t        mem_stage_out,
-    input  logic [DATA_WIDTH-1:0] mem_data_out,
-    output logic [DATA_WIDTH-1:0] lsu_data_out,
-    output logic [DATA_WIDTH-1:0] mem_data_in,
-    output logic [DATA_WIDTH-1:0] mem_addr_in,
-    output logic [3:0]     mask
+    input  logic                    clk,
+    input  logic                    arst_n,
+    input  mem_stage_in_t           mem_stage_in,
+    output mem_stage_out_t          mem_stage_out,
+    input  logic [DATA_WIDTH-1:0]   mem_data_out,
+    output logic [DATA_WIDTH-1:0]   lsu_data_out,
+    output logic [DATA_WIDTH-1:0]   mem_data_in,
+    output logic [DATA_WIDTH-1:0]   mem_addr_in,
+    output logic [DATA_WIDTH/8-1:0] mask
 );
 
     logic [DATA_WIDTH-1:0] dmem_addr_in;
@@ -51,10 +51,11 @@ module mem_stage
         .mask       (mask                   )
     );
 
-    // assign mem_stage_out.opr_res = mem_stage_in.opr_res;
-    // assign mem_stage_out.rd      = mem_stage_in.rd;
-    // assign mem_stage_out.pc4     = mem_stage_in.pc4;
-    // assign mem_stage_out.rf_en   = mem_stage_in.rf_en;
-    // assign mem_stage_out.wb_sel  = mem_stage_in.wb_sel;
+    assign mem_stage_out.lsu_rdata = lsu_data_out;
+    assign mem_stage_out.opr_res   = mem_stage_in.opr_res;
+    assign mem_stage_out.rd        = mem_stage_in.rd;
+    assign mem_stage_out.pc4       = mem_stage_in.pc4;
+    assign mem_stage_out.rf_en     = mem_stage_in.rf_en;
+    assign mem_stage_out.wb_sel    = mem_stage_in.wb_sel;
 
 endmodule: mem_stage
