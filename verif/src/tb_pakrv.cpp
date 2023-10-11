@@ -21,7 +21,7 @@ void INThandler(int signal)
 }
 
 int main(int argc, char** argv) {
-  Verilated::traceEverOn(true);
+  Verilated::traceEverOn(true);     // to turn on vcd file for debugging
   Verilated::commandArgs(argc, argv);
   Vtb_pakrv* tb = new Vtb_pakrv;
 

@@ -33,7 +33,7 @@ module core
     output logic [DATA_WIDTH-1:0]   pc,
     input  logic [DATA_WIDTH-1:0]   inst_in,
 
-    // data memory related ports
+    // data memory related ports to/from shared memory
     input  logic [DATA_WIDTH-1:0]   core_in_mem_data_out,
     output logic [DATA_WIDTH-1:0]   core_out_mem_addr_in,
     output logic [DATA_WIDTH-1:0]   core_out_mem_data_in,
@@ -64,10 +64,6 @@ module core
     ex_stage_in_frm_wb_t  ex_stage_in_frm_wb;
 
     logic [DATA_WIDTH-1:0] pc4;
-
-    // external memory related connections
-    logic [3:0]            mem_mask;
-    logic [DATA_WIDTH-1:0] lsu_data_out;
 
     // stage instantiations
     if_stage # (
@@ -114,13 +110,14 @@ module core
     ) i_mem_stage (
         .clk          (clk                  ),
         .arst_n       (arst_n               ),
+        .mem_data_in  (core_in_mem_data_out ),
         .mem_stage_in (mem_stage_in         ),
-        .mem_stage_out(mem_stage_out        ),
-        .mem_data_out (core_in_mem_data_out ),
-        .lsu_data_out (lsu_data_out         ),
-        .mask         (mem_mask             ),
-        .mem_data_in  (core_out_mem_data_in ),
-        .mem_addr_in  (core_out_mem_addr_in )
+
+        // this input is brought here because
+        // if given in mem_stage_in, then should have driven from exe_stage_out;
+        // implies one cycles delay because of pipeline
+        // could a better solution of it
+        .mem_stage_out(mem_stage_out        )
     );
 
     wb_stage #(
@@ -129,8 +126,11 @@ module core
         .wb_stage_out (wb_stage_out )
     );
 
+    // ports going to shared memory
+    assign core_out_mem_addr_in = mem_stage_out.core_out_mem_addr_in;
+    assign core_out_mem_data_in = mem_stage_out.core_out_mem_data_in;
     assign core_out_mem_we_in   = mem_stage_in.dm_en;
-    assign core_out_mem_mask_in = mem_mask;
+    assign core_out_mem_mask_in = mem_stage_out.mask;
 
     // combinational connections
     always_comb

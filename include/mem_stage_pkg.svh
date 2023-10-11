@@ -30,6 +30,11 @@
             // ctrl
             logic               rf_en;
             logic        [ 1:0] wb_sel;
+
+            // to shared memory
+            logic        [ 3:0] mask;
+            logic        [31:0] core_out_mem_addr_in;
+            logic        [31:0] core_out_mem_data_in;
         } mem_stage_out_t;
 
     endpackage

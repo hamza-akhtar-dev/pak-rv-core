@@ -12,18 +12,17 @@ module mem_stage
 ) (
     input  logic                    clk,
     input  logic                    arst_n,
+    input  logic [DATA_WIDTH-1:0]   mem_data_in,
     input  mem_stage_in_t           mem_stage_in,
-    output mem_stage_out_t          mem_stage_out,
-    input  logic [DATA_WIDTH-1:0]   mem_data_out,
-    output logic [DATA_WIDTH-1:0]   lsu_data_out,
-    output logic [DATA_WIDTH-1:0]   mem_data_in,
-    output logic [DATA_WIDTH-1:0]   mem_addr_in,
-    output logic [DATA_WIDTH/8-1:0] mask
+    output mem_stage_out_t          mem_stage_out
 );
 
     logic [DATA_WIDTH-1:0] dmem_addr_in;
     logic [DATA_WIDTH-1:0] dmem_data_in;
     logic [DATA_WIDTH-1:0] dmem_rdata;
+
+    logic [DATA_WIDTH-1:0]   lsu_data_out;
+    logic [DATA_WIDTH/8-1:0] mask;
 
     dmem # (
         .DATA_WIDTH    (DATA_WIDTH        ),
@@ -39,19 +38,18 @@ module mem_stage
     );
 
     lsu # (
-        .DATA_WIDTH (DATA_WIDTH             )
+        .DATA_WIDTH (DATA_WIDTH                        )
     ) i_lsu (
-        .lsuop      (mem_stage_in.lsuop     ),
-        .addr_in    (mem_stage_in.opr_res   ),
-        .addr_out   (mem_addr_in            ),
-        .data_s_in  (mem_stage_in.opr_b     ),
-        .data_s_out (mem_data_in            ),
-        .data_l_in  (mem_data_out           ),
-        .data_l_out (lsu_data_out           ),
-        .mask       (mask                   )
+        .lsuop      (mem_stage_in.lsuop                ),
+        .addr_in    (mem_stage_in.opr_res              ),
+        .addr_out   (mem_stage_out.core_out_mem_addr_in),
+        .data_s_in  (mem_stage_in.opr_b                ),
+        .data_s_out (mem_stage_out.core_out_mem_data_in),
+        .data_l_in  (mem_data_in                       ),
+        .data_l_out (mem_stage_out.lsu_rdata           ),
+        .mask       (mem_stage_out.mask                )
     );
 
-    assign mem_stage_out.lsu_rdata = lsu_data_out;
     assign mem_stage_out.opr_res   = mem_stage_in.opr_res;
     assign mem_stage_out.rd        = mem_stage_in.rd;
     assign mem_stage_out.pc4       = mem_stage_in.pc4;
