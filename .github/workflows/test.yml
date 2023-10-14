@@ -21,9 +21,13 @@ jobs:
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
         git clone https://github.com/AhsanAliUet/tools
         cd $GITHUB_WORKSPACE/tools
+        tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
 
+        export VERILATOR_ROOT=$(pwd)/verilator
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
+        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH     # add verilator PATH
+        echo $GITHUB_WORKSPACE/tools/verilator/include >> $GITHUB_PATH     # add verilator PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
