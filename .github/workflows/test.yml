@@ -23,16 +23,18 @@ jobs:
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
 
-        # add verilator to /usr/local/share
-        # why PATH is not chosen for verilator?
+        # add verilator/include to /usr/local/share
+        # why PATH is not chosen for verilator/include?
         # this is because verilator_bin uses verilator/include/verilated_std.sv
         # if verilator/include/verilated_std.sv added in PATH, is not read by verilator_bin
-        # but easily read is put in /usr/local/share/verilator/bin/include
+        # but easily read when put in /usr/local/share/verilator/bin/include
         sudo mkdir /usr/local/share/verilator
-        sudo cp -r verilator/* /usr/local/share/verilator/
+        sudo mkdir /usr/local/share/verilator/include
+        sudo cp -r verilator/include/* /usr/local/share/verilator/include/
 
-        # add sail_cSim to PATH
-        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH
+        export VERILATOR_ROOT=$(pwd)/verilator
+        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail_cSim to PATH
+        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH     # add verilator to PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
