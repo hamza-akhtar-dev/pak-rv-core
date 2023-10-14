@@ -19,7 +19,6 @@ jobs:
         curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
         sudo apt update
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
-        sudo apt install verilator
         git clone https://github.com/AhsanAliUet/tools
         cd $GITHUB_WORKSPACE/tools
         tar -xzf sail_cSim.tar.gz
