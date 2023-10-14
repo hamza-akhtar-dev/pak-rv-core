@@ -15,6 +15,8 @@ jobs:
 
     - name: Install Verilator, Sail, RISC-OF and Cocotb
       run: |
+        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
+        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
         sudo apt update
         sudo apt-get -y install ccache
         set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
@@ -23,18 +25,19 @@ jobs:
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
 
-        # add verilator/include to /usr/local/share
-        # why PATH is not chosen for verilator/include?
+        # Add verilator to PATH
+        # add verilator to /usr/local/share
+        # why PATH is not chosen for verilator?
         # this is because verilator_bin uses verilator/include/verilated_std.sv
         # if verilator/include/verilated_std.sv added in PATH, is not read by verilator_bin
         # but easily read when put in /usr/local/share/verilator/bin/include
-        sudo mkdir /usr/local/share/verilator
-        sudo mkdir /usr/local/share/verilator/include
-        sudo cp -r verilator/include/* /usr/local/share/verilator/include/
-
         export VERILATOR_ROOT=$(pwd)/verilator
-        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail_cSim to PATH
-        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH     # add verilator to PATH
+        sudo mkdir /usr/local/share/verilator
+        sudo cp -r verilator/* /usr/local/share/verilator/
+        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH       # add verilator PATH
+        echo $GITHUB_WORKSPACE/tools/verilator/include >> $GITHUB_PATH   # add verilator PATH
+
+        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH           # add sail_cSim to PATH
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
@@ -46,7 +49,7 @@ jobs:
         tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
         echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
-    - name: Run Compliance Verification Framework Tests
+    - name: Run Compliance Verification Framework
       run: |
         cd Pak-RV-Core
         git submodule update --init --recursive
