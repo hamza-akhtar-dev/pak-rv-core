@@ -15,11 +15,10 @@ jobs:
 
     - name: Install Verilator, Sail, RISC-OF and Cocotb
       run: |
-        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
-        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
+
         sudo apt update
-        sudo apt-get -y install ccache
-        set -e                 # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
+        sudo apt-get -y install ccache # compiler cache (ccache)
+        set -e                         # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
         git clone https://github.com/AhsanAliUet/tools
         cd $GITHUB_WORKSPACE/tools
         tar -xzf verilator.tar.gz
@@ -34,8 +33,7 @@ jobs:
         export VERILATOR_ROOT=$(pwd)/verilator
         sudo mkdir /usr/local/share/verilator
         sudo cp -r verilator/* /usr/local/share/verilator/
-        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH       # add verilator PATH
-        echo $GITHUB_WORKSPACE/tools/verilator/include >> $GITHUB_PATH   # add verilator PATH
+        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH       # add verilator to PATH
 
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH           # add sail_cSim to PATH
 
