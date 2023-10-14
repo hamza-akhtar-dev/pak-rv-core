@@ -24,6 +24,14 @@ jobs:
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
 
+        sudo mkdir /usr/local/share/verilator
+        sudo cp -r verilator/* /usr/local/share/verilator/
+        echo ""
+        echo ""
+        echo "We are just before a ls command"
+        echo ""
+        echo ""
+        ls /usr/local/share/verilator/
         export VERILATOR_ROOT=$(pwd)/verilator
         echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH     # add sail PATH
         echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH     # add verilator PATH
