@@ -1,6 +1,6 @@
 name: Pak-RV-Core
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
 
@@ -13,6 +13,17 @@ jobs:
       with:
         path: Pak-RV-Core
 
+    - name: Pak-RV-CI-CD-Cache 
+      uses: actions/cache@v3
+      id: pakrv-cache   # name of the cache
+      with:             # what to cache: the folder(s)
+        path: |
+          ~/Pak-RV-Core/verif/                                  # path to the folder(s)
+          ~/Pak-RV-Core/verif/riscof_compliance                 # path to the folder(s)
+        key: |
+          ${{ runner.os }}-verif-968efa6
+          ${{ runner.os }}-riscof_compliance-968efa6
+        
     - name: Install Verilator, Sail, RISC-OF and Cocotb
       run: |
 
@@ -48,6 +59,7 @@ jobs:
         echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
     - name: Run Compliance Verification Framework
+      if: steps.pakrv-cache.outputs.cache-hit != 'true'
       run: |
         cd Pak-RV-Core
         git submodule update --init --recursive
