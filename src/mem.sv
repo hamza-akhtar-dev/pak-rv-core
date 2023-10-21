@@ -19,50 +19,28 @@ module mem
     input  logic [DATA_WIDTH-1:0] data_in,
     output logic [DATA_WIDTH-1:0] data_out
 );
-    logic [DATA_WIDTH-1:0] data_memory [28'h3ff_ffff];
-    integer write_sig;
+    // shared instruction and data memory
+    logic [DATA_WIDTH-1:0] memory [24'hff_ffff]; // some arbitrary memory for now only
 
-    assign data_out = data_memory[addr[ADDR_WIDTH-1:2]];
+    assign data_out = memory[addr[ADDR_WIDTH-1:2]];
 
-    assign inst_out = data_memory[pc[DATA_WIDTH-1:2] - 32'h8000_0000];    // load instruction with given PC
+    assign inst_out = memory[pc[DATA_WIDTH-1:2] - 32'h8000_0000];    // load instruction with given PC
 
     `ifndef COMPLIANCE
         initial
         begin
-            $readmemh("../verif/gen_machine_codes/build/machine_code.mem", data_memory);
+            $readmemh("../verif/gen_machine_codes/build/machine_code.mem", memory);
         end
     `endif
-
-    always @ (posedge clk)
-    begin
-        if (write_en && addr == 32'h8E00_0000)
-        begin
-            $fwrite(write_sig, "%h\n", data_in);
-        end
-        if (write_en && addr == 32'h8F00_0000)
-        begin
-            $finish;
-        end
-    end
-
-    initial
-    begin
-        write_sig = $fopen("DUT-pakrv.signature", "w"); // Open file for writing
-        if (write_sig == 0)
-        begin
-            $display("Error opening file for writing");
-            $finish;
-        end
-    end
     
     always_ff @ (posedge clk, negedge arst_n)
     begin
         if (write_en)
         begin
-            if (mask[0]) data_memory[addr[ADDR_WIDTH-1:2]][ 7: 0] <= data_in[ 7: 0];
-            if (mask[1]) data_memory[addr[ADDR_WIDTH-1:2]][15: 8] <= data_in[15: 8];
-            if (mask[2]) data_memory[addr[ADDR_WIDTH-1:2]][23:16] <= data_in[23:16];
-            if (mask[3]) data_memory[addr[ADDR_WIDTH-1:2]][31:24] <= data_in[31:24];
+            if (mask[0]) memory[addr[ADDR_WIDTH-1:2]][ 7: 0] <= data_in[ 7: 0];
+            if (mask[1]) memory[addr[ADDR_WIDTH-1:2]][15: 8] <= data_in[15: 8];
+            if (mask[2]) memory[addr[ADDR_WIDTH-1:2]][23:16] <= data_in[23:16];
+            if (mask[3]) memory[addr[ADDR_WIDTH-1:2]][31:24] <= data_in[31:24];
         end
     end
 

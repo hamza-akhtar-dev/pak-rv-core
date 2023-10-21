@@ -3,22 +3,27 @@
 // this test-bench has inputs ports because
 // to do simulation using verilator, we need a cpp test-bench as well
 
-module tb_pakrv (
+`define MEM        i_core_top.i_mem
+
+module tb_pakrv #(
+    localparam DATA_WIDTH = 32
+)(
     input logic clk,
     input logic arst_n
 );
 
-    logic [1023:0]              instructions;
-    int                         time_out;
-
+    string  instructions;
+    integer time_out;
+    integer signature_fp;
+    
     core_top # (
-        .DATA_WIDTH    ( 32     )
-    ) i_core_top (
-        .clk           ( clk    ),
-        .arst_n        ( arst_n )
+        .DATA_WIDTH ( DATA_WIDTH )
+    ) i_core_top    (
+        .clk        ( clk        ),
+        .arst_n     ( arst_n     )
     );
 
-    // dumping for debugging purposes
+    // dumping vcd for debugging purposes
     initial
     begin
         $dumpfile("pakrv_dump.vcd");
@@ -37,11 +42,41 @@ module tb_pakrv (
 
     initial
     begin
+        forever
+        begin
+            @ (posedge clk);
+
+            // dumping condition in the case of compliance testing
+            if (`MEM.write_en && `MEM.addr == 32'h8E00_0000)
+            begin
+                $fwrite(signature_fp, "%h\n", `MEM.data_in);
+            end
+
+            // HALT condition in the case of compliance testing
+            if (`MEM.write_en && `MEM.addr == 32'h8F00_0000)
+            begin
+                $finish;
+            end
+        end
+    end
+
+    initial
+    begin
+        signature_fp = $fopen("DUT-pakrv.signature", "w"); // signature dumping file
+        if (signature_fp == 0)
+        begin
+            $display("Error opening file for signature dumping");
+            $finish;
+        end
+    end
+
+    initial
+    begin
         // Load instructions from given file (%s)
         if ($value$plusargs("imem=%s", instructions))
         begin
             $display("Loading Instruction Memory from %0s", instructions);
-            $readmemh(instructions, i_core_top.i_mem.data_memory);
+            $readmemh(instructions, i_core_top.i_mem.memory);
         end
 
         // if some instruction hangs, we should stop simulation after time time_out (%d)
