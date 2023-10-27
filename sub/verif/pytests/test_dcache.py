@@ -63,14 +63,16 @@ async def reset(dut):
     dut.arst_n.value = 0
     await FallingEdge(dut.clk)
     dut.arst_n.value = 1
+    await RisingEdge(dut.clk)
 
 # driver
 async def driver(dut, num_tests):
     for _ in range (num_tests):
         dut.write_en.value = 1
         dut.addr.value     = random.randint(0, 100000000)
-        dut.data_in.value  = random.randint(0, 100000000)
+        dut.data_in.value  = random.randint(0, 1000000000000)
         await RisingEdge(dut.clk)
+        dut.addr.value     = random.randint(0, 100000000)
         dut.write_en.value = 0
         for _ in range(10):
             await RisingEdge(dut.clk)
@@ -91,7 +93,7 @@ async def monitor(dut, cycles):
 async def test_dcache(dut):
 
     # step1: generate clock
-    cocotb.start_soon(Clock(dut.clk, 10, units='ns').start())
+    cocotb.start_soon(Clock(dut.clk, 1, units='ns').start())
     
     # step2: reset sequence
     reset_thread = cocotb.start_soon(reset(dut))
@@ -99,7 +101,7 @@ async def test_dcache(dut):
 
     # step3: start monitor and driver threads
     # monitor_thread = cocotb.start_soon(monitor(dut, num_cycles))
-    driver_thread  = cocotb.start_soon(driver(dut, 100))
+    driver_thread  = cocotb.start_soon(driver(dut, 100000))
     
     # step4: wait for monitor and driver threads to finish
     await Join(driver_thread)

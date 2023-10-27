@@ -21,22 +21,21 @@ module dcache # (
     // direct mapped dcache
 
     localparam WORD_SIZE       = 4; // 4 bytes per word
+    localparam BYTE_OFFSET     = $clog2(WORD_SIZE);
     localparam WORD_SIZE_BITS  = $clog2(WORD_SIZE);
-    localparam BLOCK_SIZE_BITS = (BLOCK_SIZE == 1) ? BLOCK_SIZE : $clog2(BLOCK_SIZE+1);
+    localparam BLOCK_SIZE_BITS = $clog2(BLOCK_SIZE);
     localparam NUM_BLOCKS_BITS = $clog2(NUM_BLOCKS);
-    localparam TAG_BITS        = DATA_WIDTH-NUM_BLOCKS_BITS-BLOCK_SIZE_BITS;
+    localparam TAG_BITS        = DATA_WIDTH-NUM_BLOCKS_BITS-BLOCK_SIZE_BITS-BYTE_OFFSET;  // -2 for byte of
 
     logic [WORD_SIZE_BITS -1 :0] byte_offset;
     logic [BLOCK_SIZE_BITS-1 :0] block_offset;
     logic [NUM_BLOCKS_BITS-1 :0] block_num;
-
     logic [TAG_BITS-1:0]         tag;
 
-    logic [BLOCK_SIZE-1:0][DATA_WIDTH-1:0] cache [NUM_BLOCKS];
-    logic [TAG_BITS-1:0]                   tags  [NUM_BLOCKS];
+    logic [BLOCK_SIZE-1:0][DATA_WIDTH-1:0] cache [NUM_BLOCKS-1:0];
+    logic [TAG_BITS-1:0]                   tags  [NUM_BLOCKS-1:0];
 
-    // {tag, block_num, block_offset, byte_offset}
-    assign byte_offset  = addr[1:0];
+    assign byte_offset  = addr[BYTE_OFFSET    -1  : 0                  ];
     assign block_offset = addr[                2 +: BLOCK_SIZE_BITS    ];
     assign block_num    = addr[BLOCK_SIZE_BITS+2 +: NUM_BLOCKS_BITS    ];
     assign tag          = addr[     DATA_WIDTH-1  : DATA_WIDTH-TAG_BITS];
@@ -60,6 +59,7 @@ module dcache # (
         if (~arst_n)
         begin
             cache <= '{default: '0};
+            tags  <= '{default: '0};
         end
         else if (write_en)
         begin
@@ -68,9 +68,4 @@ module dcache # (
         end
     end
 
-    final
-    begin
-        $writememh("tags.mem", tags);
-        $writememh("cache.mem", cache);
-    end
 endmodule: dcache
