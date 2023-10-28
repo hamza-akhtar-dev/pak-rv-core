@@ -27,7 +27,7 @@ else ifeq ($(DUT), rf)
     SIM_BUILD = build/build_rf
 else ifeq ($(DUT), dcache)
     TOPLEVEL  = $(DUT)
-    PARAMS    = -GDATA_WIDTH=32
+    PARAMS    = -GDATA_WIDTH=32 -GCACHE_TYPE=$(CACHE_TYPE)
     MODULE    = pytests.test_$(TOPLEVEL)
     _SRCS     = dcache.sv
     SIM_BUILD = build/build_dcache

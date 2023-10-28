@@ -101,7 +101,7 @@ async def test_dcache(dut):
 
     # step3: start monitor and driver threads
     # monitor_thread = cocotb.start_soon(monitor(dut, num_cycles))
-    driver_thread  = cocotb.start_soon(driver(dut, 100000))
+    driver_thread  = cocotb.start_soon(driver(dut, 1000000))
     
     # step4: wait for monitor and driver threads to finish
     await Join(driver_thread)
