@@ -13,6 +13,11 @@
             // ctrl
             logic               rf_en;
             logic        [ 1:0] wb_sel;
+
+            // to shared memory (redundant for wb stage)
+            logic        [ 3:0] mask;
+            logic        [31:0] core_out_mem_addr_in;
+            logic        [31:0] core_out_mem_data_in;
         } wb_stage_in_t;
 
         typedef struct packed 

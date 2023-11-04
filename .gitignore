@@ -10,3 +10,8 @@ rf.mem
 
 # ===== Ignore local vscode setup files
 .vscode/
+
+# ===== Ignore compliance related files
+riscof_work/
+verilator_work/
+pakrv_dump.vcd

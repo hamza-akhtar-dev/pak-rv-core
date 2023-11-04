@@ -1,0 +1,3 @@
+[submodule "verif/riscof_compliance"]
+	path = verif/riscof_compliance
+	url = https://github.com/AhsanAliUet/riscof_compliance

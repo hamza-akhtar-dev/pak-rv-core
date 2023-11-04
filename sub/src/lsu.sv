@@ -1,4 +1,5 @@
 // Load Store Unit
+// For more information, please refer to docs/riscv-spec-isa-user-manual-volume1-unprivileged.pdf
 
 `include "lsu_pkg.svh"
 
@@ -87,17 +88,17 @@ module lsu
                     end
                     2'b01:
                     begin
-                        data_s_out[15:8] = data_s_in[15:8];
+                        data_s_out[15:8] = data_s_in[7:0];
                         mask             = 4'b0010;
                     end
                     2'b10:
                     begin
-                        data_s_out[23:16] = data_s_in[23:16];
+                        data_s_out[23:16] = data_s_in[7:0];
                         mask              = 4'b0100;
                     end
                     2'b11:
                     begin
-                        data_s_out[31:24] = data_s_in[31:24];
+                        data_s_out[31:24] = data_s_in[7:0];
                         mask              = 4'b1000;
                     end
                     default:
@@ -121,7 +122,7 @@ module lsu
                     end
                     1'b1:
                     begin
-                        data_s_out[31:16] = data_s_in[31:16];
+                        data_s_out[31:16] = data_s_in[15:0];
                         mask              = 4'b1100;
                     end
                     default:

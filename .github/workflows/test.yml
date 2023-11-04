@@ -13,54 +13,56 @@ jobs:
       with:
         path: Pak-RV-Core
 
-    - name: Install verilator and cocotb
+    - name: Pak-RV-CI-CD-Cache 
+      uses: actions/cache@v3
+      id: pakrv-cache   # name of the cache
+      with:             # what to cache: the folder(s)
+        path: |
+          ~/Pak-RV-Core/verif/                                  # path to the folder(s)
+          ~/Pak-RV-Core/verif/riscof_compliance                 # path to the folder(s)
+        key: |
+          ${{ runner.os }}-verif-968efa6
+          ${{ runner.os }}-riscof_compliance-968efa6
+        
+    - name: Install Verilator, Sail, RISC-OF and Cocotb
       run: |
-        sudo apt-get install -y python3-setuptools
-        echo 'deb http://download.opensuse.org/repositories/home:/phiwag:/edatools/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/home:phiwag:edatools.list
-        curl -fsSL https://download.opensuse.org/repositories/home:phiwag:edatools/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_phiwag_edatools.gpg > /dev/null
-        sudo apt-get update
-        sudo apt-get upgrade
-        set -e
 
-        # Get directory of script
-        src_path=$(cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P)
-        
-        sudo apt-get install -y git perl python3 make autoconf g++ flex bison ccache
-        sudo apt-get install -y libunwind-dev libgoogle-perftools-dev numactl perl-doc help2man
-        sudo apt-get install -y libfl2
-        sudo apt-get install -y libfl-dev
-        sudo apt-get install -y zlib1g zlib1g-dev
-        
-        mkdir -p deps
-        cd deps
-        
-        unset VERILATOR_ROOT
-        
-        git clone https://github.com/verilator/verilator
-        cd verilator
-        git checkout v5.012
-        
-        autoconf
-        
-        args=
-        if [ ! -z ${PREFIX} ]; then
-            args=--prefix="$PREFIX"
-        fi
-        
-        ./configure $args
-        make -j$(nproc)
-        sudo make install
-        
-        cd -
+        sudo apt update
+        sudo apt-get -y install ccache # compiler cache (ccache)
+        set -e                         # exit immediately exit with non-zero value (or throw error and stop the CI/CD)
+        git clone https://github.com/AhsanAliUet/tools
+        cd $GITHUB_WORKSPACE/tools
+        tar -xzf verilator.tar.gz
+        tar -xzf sail_cSim.tar.gz
+
+        # Add verilator to PATH
+        # add verilator to /usr/local/share
+        # why PATH is not chosen for verilator?
+        # this is because verilator_bin uses verilator/include/verilated_std.sv
+        # if verilator/include/verilated_std.sv added in PATH, is not read by verilator_bin
+        # but easily read when put in /usr/local/share/verilator/bin/include
+        export VERILATOR_ROOT=$(pwd)/verilator
+        sudo mkdir /usr/local/share/verilator
+        sudo cp -r verilator/* /usr/local/share/verilator/
+        echo $GITHUB_WORKSPACE/tools/verilator/bin >> $GITHUB_PATH       # add verilator to PATH
+
+        echo $GITHUB_WORKSPACE/tools/sail_cSim >> $GITHUB_PATH           # add sail_cSim to PATH
+
         pip3 install cocotb
+        pip3 install git+https://github.com/riscv/riscof.git
 
-    - name: Setup toolchain
+    - name: Setup RISC-V GNU toolchain
       run: |
+        
         wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-4.0.0/riscv32-unknown-elf.gcc-12.1.0.tar.gz
         tar -xzf riscv32-unknown-elf.gcc-12.1.0.tar.gz
         echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
-    - name: Run Verification Framework
+    - name: Run Compliance Verification Framework
+      if: steps.pakrv-cache.outputs.cache-hit != 'true'
       run: |
         cd Pak-RV-Core
-        make all
+        git submodule update --init --recursive
+        cd verif/riscof_compliance
+        chmod +x ./run-compliance.sh
+        ./run-compliance.sh

@@ -7,10 +7,10 @@ module cfu
 # (
     parameter DATA_WIDTH = 32
 ) (
-    input  cfuop_t                       cfuop,
-    input  logic signed [DATA_WIDTH-1:0] opr_a,
-    input  logic signed [DATA_WIDTH-1:0] opr_b,
-    output logic                         br_taken
+    input  cfuop_t                 cfuop,
+    input  logic  [DATA_WIDTH-1:0] opr_a,
+    input  logic  [DATA_WIDTH-1:0] opr_b,
+    output logic                   br_taken
 );
    
     always_comb 
@@ -18,8 +18,8 @@ module cfu
         case (cfuop)
             cfu_pkg::BEQ:  br_taken = (opr_a == opr_b) ? 1 : 0;
             cfu_pkg::BNE:  br_taken = (opr_a != opr_b) ? 1 : 0;
-            cfu_pkg::BLT:  br_taken = (opr_a <  opr_b) ? 1 : 0;
-            cfu_pkg::BGE:  br_taken = (opr_a >= opr_b) ? 1 : 0;
+            cfu_pkg::BLT:  br_taken = ($signed(opr_a) <  $signed(opr_b)) ? 1 : 0;
+            cfu_pkg::BGE:  br_taken = ($signed(opr_a) >= $signed(opr_b)) ? 1 : 0;
             cfu_pkg::BLTU: br_taken = (opr_a <  opr_b) ? 1 : 0;
             cfu_pkg::BGEU: br_taken = (opr_a >= opr_b) ? 1 : 0;
             cfu_pkg::JAL:  br_taken = 1;

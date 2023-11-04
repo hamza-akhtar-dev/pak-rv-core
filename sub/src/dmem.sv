@@ -4,7 +4,7 @@ module dmem
 # (
     parameter DATA_WIDTH    = 32,
     parameter DMEM_SZ_IN_KB = 1,
-    localparam ADDR_WIDTH   = $clog2(DMEM_SZ_IN_KB*1024),
+    localparam ADDR_WIDTH   = 32,
     localparam MASK_SIZE    = DATA_WIDTH/8
 ) (
     input  logic                  clk,
@@ -15,10 +15,33 @@ module dmem
     input  logic [DATA_WIDTH-1:0] data_in,
     output logic [DATA_WIDTH-1:0] data_out
 );
-    logic [DATA_WIDTH-1:0] data_memory [(DMEM_SZ_IN_KB*1024)/4];
+    logic [DATA_WIDTH-1:0] data_memory [2**ADDR_WIDTH];
+    integer write_sig;
 
     assign data_out = data_memory[addr[ADDR_WIDTH-1:2]];
 
+    always @ (posedge clk)
+    begin
+        if (write_en && addr == 32'h8E00_0000)
+        begin
+            $fwrite(write_sig, "%h\n", data_in);
+        end
+        if (write_en && addr == 32'h8F00_0000)
+        begin
+            $finish;
+        end
+    end
+
+    initial
+    begin
+        write_sig = $fopen("DUT-pakrv.signature", "w"); // Open file for writing
+        if (write_sig == 0)
+        begin
+            $display("Error opening file for writing");
+            $finish;
+        end
+    end
+    
     always_ff @ (posedge clk, negedge arst_n)
     begin
         if (~arst_n)
@@ -32,12 +55,6 @@ module dmem
             if (mask[2]) data_memory[addr[ADDR_WIDTH-1:2]][23:16] <= data_in[23:16];
             if (mask[3]) data_memory[addr[ADDR_WIDTH-1:2]][31:24] <= data_in[31:24];
         end
-    end
-
-    // for debugging purpose
-    final
-    begin
-        $writememh("dmem.mem", data_memory, 0, 255);;
     end
 
 endmodule: dmem
