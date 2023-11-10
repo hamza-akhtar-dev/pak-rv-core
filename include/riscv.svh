@@ -11,6 +11,7 @@
     `define OPCODE_JAL    7'b1101111
     `define OPCODE_LUI    7'b0110111
     `define OPCODE_AUIPC  7'b0010111
+    `define OPCODE_CSR    7'b1110011
 
     `define FUNCT3_ADD_SUB 3'b000
     `define FUNCT3_SLL     3'b001
@@ -36,6 +37,13 @@
     `define FUNCT3_BGE  3'b101
     `define FUNCT3_BLTU 3'b110
     `define FUNCT3_BGEU 3'b111
+
+    `define FUNCT3_CSRRW  3'b001
+    `define FUNCT3_CSRRS  3'b010
+    `define FUNCT3_CSRRC  3'b011
+    `define FUNCT3_CSRRWI 3'b101
+    `define FUNCT3_CSRRSI 3'b110
+    `define FUNCT3_CSRRCI 3'b111
 
     `define FUNCT7_VAR1 7'b0000000
     `define FUNCT7_VAR2 7'b0100000

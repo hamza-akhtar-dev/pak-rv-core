@@ -10,6 +10,7 @@ module id_stage
     import id_stage_pkg::id_hdu_out_t;
     import wb_stage_pkg::wb_stage_out_t;
     import id_stage_pkg::gen_imm_f;
+    import id_stage_pkg::gen_zimm_f;
 # (
     parameter DATA_WIDTH = 32
 ) (
@@ -60,8 +61,10 @@ module id_stage
         .aluop       (id_stage_out.aluop    ),
         .cfuop       (id_stage_out.cfuop    ),
         .lsuop       (id_stage_out.lsuop    ),
+        .csrop       (id_stage_out.csrop    ),
         .rf_en       (id_stage_out.rf_en    ),
         .dm_en       (id_stage_out.dm_en    ),
+        .csr_wr_en   (id_stage_out.csr_wr_en),
         .opr_a_sel   (id_stage_out.opr_a_sel),
         .opr_b_sel   (id_stage_out.opr_b_sel),
         .wb_sel      (id_stage_out.wb_sel   )
@@ -80,7 +83,8 @@ module id_stage
     assign id_stage_out.rd  = id_stage_in.inst[11:7];
 
     // immediate generation
-    assign id_stage_out.imm = gen_imm_f(id_stage_in.inst);
+    assign id_stage_out.imm  = gen_imm_f(id_stage_in.inst);
+    assign id_stage_out.zimm = gen_zimm_f(id_stage_in.inst);
 
     // propagate signals to next stage
     assign id_stage_out.rs1 = rs1;
