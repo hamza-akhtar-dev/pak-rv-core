@@ -20,14 +20,17 @@
             logic [31:0] opr_a;
             logic [31:0] opr_b;
             logic [31:0] imm;
+            logic [31:0] zimm;
             logic [31:0] pc;
             logic [31:0] pc4;
             // ctrl
             aluop_t      aluop;
             cfuop_t      cfuop;
             lsuop_t      lsuop;
+            csrop_t      csrop;
             logic        rf_en;
             logic        dm_en;
+            logic        csr_wr_en;
             logic        opr_a_sel;
             logic        opr_b_sel;
             logic [ 1:0] wb_sel;
@@ -50,13 +53,18 @@
         typedef struct packed
         {
             logic        [ 4:0] rd;
+            logic signed [31:0] opr_a;
             logic signed [31:0] opr_b;
+            logic        [31:0] imm;
+            logic        [31:0] zimm;
             logic signed [31:0] opr_res;
             logic        [31:0] pc4;
             // ctrl
             lsuop_t             lsuop;
+            csrop_t             csrop;
             logic               rf_en;
             logic               dm_en;
+            logic               csr_wr_en;
             logic        [ 1:0] wb_sel;
         } ex_stage_out_t;
 

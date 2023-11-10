@@ -8,6 +8,7 @@ module mem_stage
 # (
     parameter DATA_WIDTH    = 32,
     parameter DMEM_SZ_IN_KB = 1,
+    parameter NUM_CS_REGISTERS = `NUM_CS_REGISTERS,
     localparam MASK_SIZE    = DATA_WIDTH/8
 ) (
     input  logic                    clk,
@@ -48,6 +49,22 @@ module mem_stage
         .data_l_in  (mem_data_in                       ),
         .data_l_out (mem_stage_out.lsu_rdata           ),
         .mask       (mem_stage_out.mask                )
+    );
+
+    csr # (
+        .DATA_WIDTH (DATA_WIDTH),
+        .NUM_REGISTERS(NUM_CS_REGISTERS)
+    ) i_csr (
+        .clk(clk),
+        .arst_n(arst_n),
+
+        .csrop(mem_stage_in.csrop),
+        .rs1_data(mem_stage_in.opr_a),
+        .zimm(mem_stage_in.zimm),
+
+        .addr_in(mem_stage_in.imm[11:0]),
+        .wr_en_in(mem_stage_in.csr_wr_en),
+        .rd_data_out(mem_stage_out.csr_rdata)
     );
 
     assign mem_stage_out.opr_res   = mem_stage_in.opr_res;

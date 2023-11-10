@@ -1,2 +1,4 @@
 `verilator_config
 lint_off -rule WIDTHTRUNC -file "*../src/if_stage.sv" -lines 44-44
+lint_off -rule WIDTHTRUNC -file "*../src/mem.sv" -lines 25-43
+lint_off -rule WIDTHEXPAND -file "*../src/mem.sv" -lines 25-27

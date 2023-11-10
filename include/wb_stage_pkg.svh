@@ -8,6 +8,7 @@
         {
             logic signed [31:0] opr_res;
             logic        [31:0] lsu_rdata;
+            logic        [31:0] csr_rdata;
             logic        [ 4:0] rd;
             logic        [31:0] pc4;
             // ctrl

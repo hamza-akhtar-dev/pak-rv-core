@@ -5,14 +5,17 @@
 `include "alu_pkg.svh"
 `include "lsu_pkg.svh"
 `include "cfu_pkg.svh"
+`include "csr_pkg.svh"
 
 module ctrl_unit 
     import alu_pkg::aluop_t;
     import cfu_pkg::cfuop_t;
     import lsu_pkg::lsuop_t;
+    import csr_pkg::csrop_t;
     import alu_pkg::gen_aluop_f;
     import cfu_pkg::gen_cfuop_f;
     import lsu_pkg::gen_lsuop_f;
+    import csr_pkg::gen_csrop_f;
 #(
 ) (
     input  logic [6:0] opcode,
@@ -21,8 +24,10 @@ module ctrl_unit
     output aluop_t     aluop,
     output lsuop_t     lsuop,
     output cfuop_t     cfuop,
+    output csrop_t     csrop,
     output logic       rf_en,
     output logic       dm_en,
+    output logic       csr_wr_en,
     output logic       opr_a_sel,
     output logic       opr_b_sel,
     output logic [1:0] wb_sel
@@ -31,6 +36,7 @@ module ctrl_unit
     assign aluop = gen_aluop_f(opcode, funct7, funct3);
     assign lsuop = gen_lsuop_f(opcode, funct3);
     assign cfuop = gen_cfuop_f(opcode, funct3);
+    assign csrop = gen_csrop_f(opcode, funct3);
 
     // control signals
     always_comb
@@ -43,6 +49,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_OPIMM:
             begin
@@ -51,6 +58,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_LOAD:
             begin
@@ -59,6 +67,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b01;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_STORE:
             begin
@@ -67,6 +76,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_BRANCH:
             begin
@@ -75,6 +85,7 @@ module ctrl_unit
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_JAL:
             begin
@@ -83,6 +94,7 @@ module ctrl_unit
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_JALR:
             begin
@@ -91,6 +103,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_LUI:
             begin
@@ -99,6 +112,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
             `OPCODE_AUIPC:
             begin
@@ -107,6 +121,16 @@ module ctrl_unit
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
+            end
+            `OPCODE_CSR:
+            begin
+                rf_en     = 1'b1;
+                dm_en     = 1'b0;
+                opr_a_sel = 1'b1;
+                opr_b_sel = 1'b0;
+                wb_sel    = 2'b11;
+                csr_wr_en = 1'b1;
             end
             default:
             begin
@@ -115,6 +139,7 @@ module ctrl_unit
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
         endcase
     end
