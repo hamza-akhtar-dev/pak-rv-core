@@ -33,3 +33,6 @@ cd verif/riscof_compliance/
 chmod +x run-compliance.sh
 ./run-compliance.sh
 ```
+## Contriubution Guidelines
+
+- For detailed contribution guidlines please go to [contribution guidelines](./docs/contribution_guidelines.md)
