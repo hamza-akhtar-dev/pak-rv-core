@@ -1,0 +1,64 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x0000000000000000 0x0000000000000400 xr
+RAM              0x0000000000010000 0x0000000000000400 xrw
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD obj/test.o
+LOAD /tools/rv_toolchain/bin/../lib/gcc/riscv32-unknown-elf/12.1.0/../../../../riscv32-unknown-elf/lib/libc_nano.a
+                0x00000000000000c8                __stack_size = DEFINED (__stack_size)?__stack_size:0xc8
+
+.vector_table
+ *(SORT_NONE(.vector_table))
+
+.text           0x0000000000000000       0x5c
+ *(.rodata .rodata.*)
+ *(.srodata .srodata.*)
+ *(.text .text.*)
+ .text          0x0000000000000000       0x5c obj/test.o
+                0x000000000000005c                . = ALIGN (0x4)
+                [!provide]                        PROVIDE (__etext = .)
+                [!provide]                        PROVIDE (_etext = .)
+                [!provide]                        PROVIDE (etext = .)
+                0x000000000000005c                _sidata = .
+
+.data           0x0000000000010000        0x0 load address 0x000000000000005c
+                0x0000000000010000                _sdata = .
+ *(.rdata)
+ *(.data .data.*)
+ .data          0x0000000000010000        0x0 obj/test.o
+ *(.sdata .sdata.*)
+                0x0000000000010000                . = ALIGN (0x4)
+                0x0000000000010000                _edata = .
+                [!provide]                        PROVIDE (_edata = .)
+                [!provide]                        PROVIDE (edata = .)
+                [!provide]                        PROVIDE (_fbss = .)
+                [!provide]                        PROVIDE (__bss_start = .)
+
+.bss            0x0000000000010000        0x0 load address 0x000000000000005c
+                0x0000000000010000                _sbss = .
+ *(.sbss*)
+ *(.bss .bss.*)
+ .bss           0x0000000000010000        0x0 obj/test.o
+ *(COMMON)
+                0x0000000000010000                . = ALIGN (0x4)
+                0x0000000000010000                _ebss = .
+                0x0000000000010000                . = ALIGN (0x8)
+                [!provide]                        PROVIDE (_end = .)
+                [!provide]                        PROVIDE (end = .)
+
+.stack          0x0000000000010338       0xc8 load address 0x0000000000000394
+                [!provide]                        PROVIDE (_heap_end = .)
+                0x00000000000000c8                . = __stack_size
+ *fill*         0x0000000000010338       0xc8 
+                [!provide]                        PROVIDE (_sp = .)
+OUTPUT(obj/test.out elf32-littleriscv)
+
+.riscv.attributes
+                0x0000000000000000       0x1a
+ .riscv.attributes
+                0x0000000000000000       0x1a obj/test.o

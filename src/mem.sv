@@ -29,7 +29,7 @@ module mem
     `ifndef COMPLIANCE
         initial
         begin
-            $readmemh("../verif/gen_machine_codes/build/machine_code.mem", memory);
+            $readmemh("../verif/build/test.mem", memory);
         end
     `endif
     
