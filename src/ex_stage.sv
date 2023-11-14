@@ -83,13 +83,18 @@ module ex_stage
 
     // propagate signals to next stage
     assign ex_stage_out.opr_res = opr_res;
+    assign ex_stage_out.opr_a   = for_opr_a;
     assign ex_stage_out.opr_b   = for_opr_b;
+    assign ex_stage_out.imm     = ex_stage_in.imm;
+    assign ex_stage_out.zimm    = ex_stage_in.zimm;
     assign ex_stage_out.rd      = ex_stage_in.rd;
     assign ex_stage_out.pc4     = ex_stage_in.pc4;
     assign ex_stage_out.rf_en   = ex_stage_in.rf_en;
     assign ex_stage_out.dm_en   = ex_stage_in.dm_en;
+    assign ex_stage_out.csr_wr_en = ex_stage_in.csr_wr_en;
     assign ex_stage_out.wb_sel  = ex_stage_in.wb_sel;
     assign ex_stage_out.lsuop   = ex_stage_in.lsuop;
+    assign ex_stage_out.csrop   = ex_stage_in.csrop;
 
     // combinational signals
     assign ex_cfu_out.br_target = opr_res;

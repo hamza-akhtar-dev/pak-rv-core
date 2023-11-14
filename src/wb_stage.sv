@@ -16,6 +16,7 @@ module wb_stage
             2'b00:   wb_stage_out.wb_data = wb_stage_in.opr_res;
             2'b01:   wb_stage_out.wb_data = wb_stage_in.lsu_rdata;
             2'b10:   wb_stage_out.wb_data = wb_stage_in.pc4;
+            2'b11:   wb_stage_out.wb_data = wb_stage_in.csr_rdata;
             default: wb_stage_out.wb_data = 0;
         endcase
     end

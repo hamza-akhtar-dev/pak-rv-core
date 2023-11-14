@@ -7,10 +7,12 @@
     `include "alu_pkg.svh"
     `include "cfu_pkg.svh"
     `include "lsu_pkg.svh"
+    `include "csr_pkg.svh"
 
     import alu_pkg::aluop_t;
     import cfu_pkg::cfuop_t;
     import lsu_pkg::lsuop_t;
+    import csr_pkg::csrop_t;
 
     package id_stage_pkg;
 
@@ -35,14 +37,17 @@
             logic [31:0] opr_a;
             logic [31:0] opr_b;
             logic [31:0] imm;
+            logic [31:0] zimm;
             logic [31:0] pc;
             logic [31:0] pc4;
             // ctrl
             aluop_t      aluop;
             cfuop_t      cfuop;
             lsuop_t      lsuop;
+            csrop_t      csrop;
             logic        rf_en;
             logic        dm_en;
+            logic        csr_wr_en;
             logic        opr_a_sel;
             logic        opr_b_sel;
             logic [ 1:0] wb_sel;
@@ -85,6 +90,10 @@
                 begin      
                     imm = {{11{inst[31]}}, inst[31], inst[19:12], inst[20], inst[30:21], 1'b0};
                 end
+                `OPCODE_CSR: // CSR Instructions
+                begin
+                    imm = {20'b0, inst[31:20]};
+                end
                 default: 
                 begin
                     imm = 0;
@@ -92,6 +101,15 @@
             endcase
 
             return imm;
+
+        endfunction
+
+        function automatic logic [31:0] gen_zimm_f
+        (
+            input logic [31:0] instr
+        );
+
+            return {27'b0, instr[19:15]};            
 
         endfunction
 

@@ -1,3 +1,6 @@
 [submodule "verif/riscof_compliance"]
 	path = verif/riscof_compliance
 	url = https://github.com/AhsanAliUet/riscof_compliance
+[submodule "sub/pak-dsp"]
+	path = sub/pak-dsp
+	url = https://github.com/AhsanAliUet/pak-dsp.git
