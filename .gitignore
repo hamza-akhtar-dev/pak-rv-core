@@ -17,3 +17,7 @@ verif/DUT-pakrv.signature
 riscof_work/
 verilator_work/
 pakrv_dump.vcd
+
+#test build dir
+obj/
+

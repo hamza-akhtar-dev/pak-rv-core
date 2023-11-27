@@ -1,26 +1,26 @@
 # MACHINE_LANG can be either asm or c, this is choice whether
 # we want to convert asm to machine code or c to machine code
 
-MACHINE_LANG = asm
-ASM_FILE     = asm_code
-C_FILE       = factorial
-DUT          = core
+DUT          ?= core
+TEST 		 ?= basic_asm
 
-ifeq ($(MACHINE_LANG), asm)
-    MACHINE_CODE_GEN_TARGET = asm_to_machine
-else ifeq ($(MACHINE_LANG), c)
-    MACHINE_CODE_GEN_TARGET = c_to_machine
-else
-    MACHINE_CODE_GEN_TARGET = asm_to_machine
-endif
+ROOT=$(shell pwd)
+VERIF=$(ROOT)/verif
+TESTBUILD_DIR=$(ROOT)/verif/build
+TESTS_DIR=$(VERIF)/tests
 
-gen_machine_codes:
-	@cd verif/gen_machine_codes; make $(MACHINE_CODE_GEN_TARGET) ASM_FILE=$(ASM_FILE) C_FILE=$(C_FILE)
+all: build compile_and_simulate
+
+build:
+	@echo Compiling Test : "$(TESTS_DIR)/$(TEST)"
+	@cd $(TESTS_DIR)/$(TEST); make all;
+	@echo Copying the test.mem file in : $(TESTBUILD_DIR)
+	@cp $(TESTS_DIR)/$(TEST)/test.mem $(TESTBUILD_DIR)
 
 compile_and_simulate:
 	@cd verif && make DUT=$(DUT)
 
+.PHONY: clean
 clean:
 	@cd verif && make clean_all
 
-all: gen_machine_codes compile_and_simulate

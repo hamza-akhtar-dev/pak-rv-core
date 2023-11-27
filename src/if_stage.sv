@@ -18,19 +18,7 @@ module if_stage
     output logic [DATA_WIDTH-1:0] pc4
 );
 
-    logic [DATA_WIDTH-1:0] instruction_memory [51];
-
-    logic [   PC_SIZE-1:0] pc_in;
-    // logic [   PC_SIZE-1:0] pc_out;
-    // logic [   PC_SIZE-1:0] pc4;
-
-    `ifndef COMPLIANCE
-        initial
-        begin
-            $readmemh("../verif/gen_machine_codes/build/machine_code.mem", instruction_memory);
-        end
-    `endif
-    
+    logic [   PC_SIZE-1:0] pc_in;    
     assign pc4   = pc_out + 'd4;
     assign pc_in = if_stage_in.br_taken ? if_stage_in.br_target : pc4;
 
@@ -43,11 +31,5 @@ module if_stage
         .pc_in  (pc_in             ),
         .pc_out (pc_out            )
     );
-
-    // asychronous instruction read
-    // assign if_stage_out.inst = instruction_memory[pc_out[PC_SIZE-1:2]];
-
-    // assign if_stage_out.pc   = pc_out;
-    // assign if_stage_out.pc4  = pc4;
-
+    
 endmodule

@@ -7,7 +7,7 @@ SRC_DIR         = $(TOP_DIR)/src
 INCLUDE_DIR     = $(TOP_DIR)/include
 
 # sub directory paths
-SUB_DIR         = $(TOP_DIR)/sub
+SUB_DIR         = $(TOP_DIR)/sub/components
 SUB_SRC_DIR     = $(SUB_DIR)/src
 SUB_INCLUDE_DIR = $(SUB_DIR)/include
 
