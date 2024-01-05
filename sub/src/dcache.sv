@@ -1,4 +1,6 @@
 // data cache
+// nomanclature is used from the book
+// Digital Design and Computer Architecture, Sarah L. Harris and David Money Harris
 
 module dcache # (
     parameter  DATA_WIDTH  = 32,
@@ -97,42 +99,39 @@ module dcache # (
             assign block_offset = addr[                2 +: BLOCK_SIZE_BITS    ];
             assign tag          = addr[     DATA_WIDTH-1  : DATA_WIDTH-TAG_BITS];
 
-            always_comb
+            for (genvar i = 0; i < NUM_WAYS; i++)
             begin
-                for (genvar i = 0; i < NUM_WAYS; i++)
+                if (valids[i])
                 begin
-                    if (valids[i])
-                        begin
-                        if (tag == tags[i])
-                        begin
-                            dcache_hit = 1;
-                            data_out  = cache[i][block_offset];
-                        end
-                        else
-                        begin
-                            dcache_hit = 0;
-                            data_out   = '0;
-                        end
+                    if (tag == tags[i])
+                    begin
+                        assign dcache_hit = 1;
+                        assign data_out   = cache[i][block_offset];
                     end
                     else
                     begin
-                        dcache_hit = 0;
-                        data_out   = '0;
+                        assign dcache_hit = 0;
+                        assign data_out   = '0;
                     end
+                end
+                else
+                begin
+                    assign dcache_hit = 0;
+                    assign data_out   = '0;
                 end
             end
 
-            always_ff @ (posedge clk, negedge arst_n)
-            begin
-                if (~arst_n)
+            for (genvar i = 0; i < NUM_WAYS; i++)
+            begin            
+                always_ff @ (posedge clk, negedge arst_n)
                 begin
-                    cache  <= '{default: '0};
-                    valids <= '{default: '0};
-                    tags   <= '{default: '0};
-                end
-                else if (write_en)
-                begin
-                    for (genvar i = 0; i < NUM_WAYS; i++)
+                    if (~arst_n)
+                    begin
+                        cache  <= '{default: '0};
+                        valids <= '{default: '0};
+                        tags   <= '{default: '0};
+                    end
+                    else if (write_en)
                     begin
                         // see which valid in low, populate it
                         if (!valids[i])
@@ -170,68 +169,96 @@ module dcache # (
             logic                                  valids [NUM_WAYS-1:0][NUM_BLOCKS-1:0];
             logic [TAG_BITS-1:0]                   tags   [NUM_WAYS-1:0][NUM_BLOCKS-1:0];
             logic [DATA_WIDTH-1:0]               data_out [NUM_WAYS-1:0];
+            logic                                is_lru   [NUM_WAYS-1:0][NUM_BLOCKS-1:0];
+
 
             assign byte_offset  = addr[                                         0 +: BYTE_OFFSET    ];
             assign block_offset = addr[                               BYTE_OFFSET +: BLOCK_SIZE_BITS];
             assign set_num      = addr[               BLOCK_SIZE_BITS+BYTE_OFFSET +: NUM_WAYS_BITS  ];
             assign tag          = addr[NUM_WAYS_BITS+BLOCK_SIZE_BITS+BYTE_OFFSET  +: TAG_BITS       ];
 
-            always_comb
+            for (genvar way = 0; way < NUM_WAYS; way++)
             begin
-                for (genvar way = 0; way < NUM_WAYS; way++)
+                for (genvar block_num = 0; block_num < NUM_BLOCKS; block_num++)
                 begin
-                    for (genvar block_num = 0; block_num < NUM_BLOCKS; block_num++)
+                    always_comb
                     begin
                         if (valids[way][block_num])
                         begin
                             if (tag == tags[way][block_num])
                             begin
-                                hits    [way] = 1'b1;
-                                data_out[way] = cache[way][block_num][block_offset];
+                                assign hits    [way] = 1'b1;
+                                assign data_out[way] = cache[way][block_num][block_offset];
                             end
                             else
                             begin
-                                hits    [way] = 1'b0;
-                                data_out[way] = '0;
+                                assign hits    [way] = 1'b0;
+                                assign data_out[way] = '0;
                             end
                         end
                         else
                         begin
-                            hits    [way] = 1'b0;
-                            data_out[way] = '0;
+                            assign hits    [way] = 1'b0;
+                            assign data_out[way] = '0;
                         end
                     end
                 end
             end
 
-            // TODO: use some replacement policy
-            always_ff @ (posedge clk, negedge arst_n)
+            logic [NUM_WAYS-1:0] are_ways_full;
+            logic                is_cache_full;
+
+            for (genvar way = 0; way < NUM_WAYS; way++)
             begin
-                if (~arst_n)
+                assign are_ways_full[way] = &valids[way];
+            end
+
+            assign is_cache_full = &(are_ways_full);
+
+            for (genvar way = 0; way < NUM_WAYS; way++)
+            begin
+                for (genvar block_num = 0; block_num < NUM_BLOCKS; block_num++)
                 begin
-                    cache  <= '{default: '0};
-                    valids <= '{default: '0};
-                    tags   <= '{default: '0};
-                end
-                else if (write_en)
-                begin
-                    for (genvar way = 0; way < NUM_WAYS; way++)
+                    // TODO: use some replacement policy
+                    always_ff @ (posedge clk, negedge arst_n)
                     begin
-                        for (genvar block_num = 0; block_num < NUM_BLOCKS; block_num++)
+                        if (~arst_n)
+                        begin
+                            cache  <= '{default: '0};
+                            valids <= '{default: '0};
+                            tags   <= '{default: '0};
+                            is_lru <= '{default: '1};
+                        end
+
+                        // what to replace? LRU
+                        else if (is_cache_full && write_en)
+                        begin
+                            // see which is LRU
+                            if (is_lru[way][block_num])
+                            begin
+                                valids[way][block_num] <= 1'b1;
+                                cache [way][block_num] <= data_in;
+                                tags  [way][block_num] <= tag;
+                            end
+                        end
+
+                        // populate the cache
+                        else if (write_en)
                         begin
                             // see which valid in low, populate it
                             if (!valids[way][block_num])
                             begin
-                                valids[way][block_num]               <= 1'b1;
-                                cache [way][block_num][block_offset] <= data_in;
-                                tags  [way][block_num]               <= tag;
+                                valids[way][block_num] <= 1'b1;
+                                cache [way][block_num] <= data_in;  // replaces full block
+                                tags  [way][block_num] <= tag;
+                                is_lru[way][block_num] <= 1'b0;
                             end
                         end
                     end
                 end
             end
         end
+    
     endgenerate
-
 
 endmodule: dcache
