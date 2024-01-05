@@ -22,9 +22,11 @@
             // ctrl
             lsuop_t             lsuop;
             csrop_t             csrop;
+            amoop_t             amoop;
             logic               rf_en;
             logic               dm_en;
             logic               csr_wr_en;
+            logic               amo_wr_en;
             logic        [ 1:0] wb_sel;
         } mem_stage_in_t;
 
@@ -40,6 +42,7 @@
             logic        [ 1:0] wb_sel;
 
             // to shared memory
+            logic               amo_mem_wr_req; // memory write request by AMOs
             logic        [ 3:0] mask;
             logic        [31:0] core_out_mem_addr_in;
             logic        [31:0] core_out_mem_data_in;

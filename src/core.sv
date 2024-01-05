@@ -129,7 +129,7 @@ module core
     // ports going to shared memory
     assign core_out_mem_addr_in = mem_stage_out.core_out_mem_addr_in;
     assign core_out_mem_data_in = mem_stage_out.core_out_mem_data_in;
-    assign core_out_mem_we_in   = mem_stage_in.dm_en;
+    assign core_out_mem_we_in   = mem_stage_in.dm_en | mem_stage_out.amo_mem_wr_req;
     assign core_out_mem_mask_in = mem_stage_out.mask;
 
     // combinational connections

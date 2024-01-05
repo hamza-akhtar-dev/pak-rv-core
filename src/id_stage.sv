@@ -46,10 +46,12 @@ module id_stage
 
     logic [6:0] opcode;
     logic [6:0] funct7;
+    logic [4:0] funct5;
     logic [2:0] funct3;
 
     assign opcode = id_stage_in.inst[ 6: 0];
     assign funct7 = id_stage_in.inst[31:25];
+    assign funct5 = id_stage_in.inst[31:27];
     assign funct3 = id_stage_in.inst[14:12];
 
     // injecting control signals
@@ -57,14 +59,17 @@ module id_stage
     ) i_ctrl_unit (
         .opcode      (opcode                ),
         .funct7      (funct7                ),
+        .funct5      (funct5                ),
         .funct3      (funct3                ),
         .aluop       (id_stage_out.aluop    ),
         .cfuop       (id_stage_out.cfuop    ),
         .lsuop       (id_stage_out.lsuop    ),
         .csrop       (id_stage_out.csrop    ),
+        .amoop       (id_stage_out.amoop    ),
         .rf_en       (id_stage_out.rf_en    ),
         .dm_en       (id_stage_out.dm_en    ),
         .csr_wr_en   (id_stage_out.csr_wr_en),
+        .amo_wr_en   (id_stage_out.amo_wr_en),
         .opr_a_sel   (id_stage_out.opr_a_sel),
         .opr_b_sel   (id_stage_out.opr_b_sel),
         .wb_sel      (id_stage_out.wb_sel   )

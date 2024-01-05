@@ -22,7 +22,7 @@ OBJS      = $(addprefix $(ODIR)/, $(_OBJS))
 ALL_OBJS  =  $(OBJS)
 EXE       = $(ODIR)/test.out
 
-FLAGS_COMMON = -march=rv32i -mabi=ilp32 #-O -g -mcmodel=medany -gdwarf-2
+FLAGS_COMMON = -march=rv32ima -mabi=ilp32 #-O -g -mcmodel=medany -gdwarf-2
 LDFLAGS = -T linker.ld -nostdlib $(FLAGS_COMMON)
 
 all: $(EXE)

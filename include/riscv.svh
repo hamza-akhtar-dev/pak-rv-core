@@ -12,6 +12,7 @@
     `define OPCODE_LUI    7'b0110111
     `define OPCODE_AUIPC  7'b0010111
     `define OPCODE_CSR    7'b1110011
+    `define OPCODE_AMO    7'b0101111
 
     `define FUNCT3_ADD_SUB 3'b000
     `define FUNCT3_SLL     3'b001
@@ -44,6 +45,16 @@
     `define FUNCT3_CSRRWI 3'b101
     `define FUNCT3_CSRRSI 3'b110
     `define FUNCT3_CSRRCI 3'b111
+
+    `define FUNCT5_AMOADD_W  5'b00000
+    `define FUNCT5_AMOSWAP_W 5'b00001
+    `define FUNCT5_AMOXOR_W  5'b00010
+    `define FUNCT5_AMOAND_W  5'b01100
+    `define FUNCT5_AMOOR_W   5'b01010
+    `define FUNCT5_AMOMIN_W  5'b10000
+    `define FUNCT5_AMOMAX_W  5'b10100
+    `define FUNCT5_AMOMINU_W 5'b11000
+    `define FUNCT5_AMOMAXU_W 5'b11100
 
     `define FUNCT7_VAR1 7'b0000000
     `define FUNCT7_VAR2 7'b0100000

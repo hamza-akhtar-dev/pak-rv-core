@@ -95,6 +95,8 @@ module ex_stage
     assign ex_stage_out.wb_sel  = ex_stage_in.wb_sel;
     assign ex_stage_out.lsuop   = ex_stage_in.lsuop;
     assign ex_stage_out.csrop   = ex_stage_in.csrop;
+    assign ex_stage_out.amoop   = ex_stage_in.amoop;
+    assign ex_stage_out.amo_wr_en = ex_stage_in.amo_wr_en;
 
     // combinational signals
     assign ex_cfu_out.br_target = opr_res;
