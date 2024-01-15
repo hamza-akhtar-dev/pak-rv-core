@@ -49,9 +49,10 @@
             csrop_t      csrop;
             amoop_t      amoop;
             logic        rf_en;
-            logic        dm_en;
+            logic        dm_wr_en;
+            logic        dm_rd_en;
             logic        csr_wr_en;
-            logic        amo_wr_en;
+            logic        is_amo;
             logic        opr_a_sel;
             logic        opr_b_sel;
             logic [ 1:0] wb_sel;

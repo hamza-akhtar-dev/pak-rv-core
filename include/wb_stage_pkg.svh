@@ -14,9 +14,9 @@
             // ctrl
             logic               rf_en;
             logic        [ 1:0] wb_sel;
+            logic               amo_busy;
 
             // to shared memory (redundant for wb stage)
-            logic               amo_mem_wr_req; // memory write request by AMOs
             logic        [ 3:0] mask;
             logic        [31:0] core_out_mem_addr_in;
             logic        [31:0] core_out_mem_data_in;

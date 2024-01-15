@@ -67,9 +67,10 @@ module id_stage
         .csrop       (id_stage_out.csrop    ),
         .amoop       (id_stage_out.amoop    ),
         .rf_en       (id_stage_out.rf_en    ),
-        .dm_en       (id_stage_out.dm_en    ),
+        .dm_wr_en    (id_stage_out.dm_wr_en ),
+        .dm_rd_en    (id_stage_out.dm_rd_en ),
         .csr_wr_en   (id_stage_out.csr_wr_en),
-        .amo_wr_en   (id_stage_out.amo_wr_en),
+        .is_amo      (id_stage_out.is_amo   ),
         .opr_a_sel   (id_stage_out.opr_a_sel),
         .opr_b_sel   (id_stage_out.opr_b_sel),
         .wb_sel      (id_stage_out.wb_sel   )

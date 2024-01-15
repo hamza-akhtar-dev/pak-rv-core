@@ -50,6 +50,29 @@
 
         endfunction
         
+        // AMO's computational unit interface
+        typedef struct packed {
+            logic        busy;
+            logic [31:0] res;
+        } acu_s;
+
+        typedef struct packed {
+            logic        wr_en;
+            logic        rd_en;
+            logic [31:0] addr;
+            logic [ 3:0] mask;
+            logic [31:0] data;
+        } amo_mem_s;
+
+
+        typedef enum logic [1:0]
+        {
+            AMO_IDLE,
+            AMO_LOAD,
+            AMO_CALC,
+            AMO_DONE
+        } state_t;
+
     endpackage
 
 `endif

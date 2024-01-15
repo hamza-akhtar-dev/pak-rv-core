@@ -4,6 +4,7 @@
 `include "id_stage_pkg.svh"
 `include "ex_stage_pkg.svh"
 `include "mem_stage_pkg.svh"
+`include "amo_pkg.svh"
 `include "wb_stage_pkg.svh"
 
 module core 
@@ -16,6 +17,7 @@ module core
     import id_stage_pkg ::id_stage_out_t;
     import ex_stage_pkg ::ex_stage_out_t;
     import mem_stage_pkg::mem_stage_out_t;
+    import amo_pkg      ::amo_mem_s;
     import wb_stage_pkg ::wb_stage_out_t;
 
     import id_stage_pkg ::id_stage_in_frm_ex_t;
@@ -35,10 +37,13 @@ module core
 
     // data memory related ports to/from shared memory
     input  logic [DATA_WIDTH-1:0]   core_in_mem_data_out,
+    input  logic                    core_in_mem_read_resp,
+    output logic                    core_out_mem_re_in,
     output logic [DATA_WIDTH-1:0]   core_out_mem_addr_in,
     output logic [DATA_WIDTH-1:0]   core_out_mem_data_in,
     output logic                    core_out_mem_we_in,
-    output logic [DATA_WIDTH/8-1:0] core_out_mem_mask_in
+    output logic [DATA_WIDTH/8-1:0] core_out_mem_mask_in,
+    output amo_mem_s                amo_to_mem_if
 );
     // stage signals
     if_stage_in_t  if_stage_in;
@@ -104,6 +109,8 @@ module core
         .ex_cfu_out         (ex_cfu_out         )
     );
 
+    logic amo_stall;
+
     mem_stage #(
         .DATA_WIDTH   (DATA_WIDTH           ),
         .DMEM_SZ_IN_KB(DMEM_SZ_IN_KB        )
@@ -111,13 +118,16 @@ module core
         .clk          (clk                  ),
         .arst_n       (arst_n               ),
         .mem_data_in  (core_in_mem_data_out ),
+        .mem_resp_in  (core_in_mem_read_resp),
         .mem_stage_in (mem_stage_in         ),
 
         // this input is brought here because
         // if given in mem_stage_in, then should have driven from exe_stage_out;
         // implies one cycles delay because of pipeline
         // could a better solution of it
-        .mem_stage_out(mem_stage_out        )
+        .mem_stage_out(mem_stage_out        ),
+        .amo_to_mem_if(amo_to_mem_if        ),
+        .stall_req    (amo_stall            )
     );
 
     wb_stage #(
@@ -127,17 +137,18 @@ module core
     );
 
     // ports going to shared memory
-    assign core_out_mem_addr_in = mem_stage_out.core_out_mem_addr_in;
-    assign core_out_mem_data_in = mem_stage_out.core_out_mem_data_in;
-    assign core_out_mem_we_in   = mem_stage_in.dm_en | mem_stage_out.amo_mem_wr_req;
-    assign core_out_mem_mask_in = mem_stage_out.mask;
+    assign core_out_mem_addr_in = amo_to_mem_if.wr_en ? amo_to_mem_if.addr : mem_stage_out.core_out_mem_addr_in;
+    assign core_out_mem_data_in = amo_to_mem_if.wr_en ? amo_to_mem_if.data : mem_stage_out.core_out_mem_data_in;
+    assign core_out_mem_we_in   = mem_stage_in.dm_wr_en | amo_to_mem_if.wr_en;
+    assign core_out_mem_re_in   = mem_stage_in.dm_rd_en;
+    assign core_out_mem_mask_in = amo_to_mem_if.wr_en ? amo_to_mem_if.mask : mem_stage_out.mask;
 
     // combinational connections
     always_comb
     begin
         if_stage_in.br_taken        = ex_cfu_out.br_taken;
         if_stage_in.br_target       = ex_cfu_out.br_target;
-        if_stage_in.stall           = id_hdu_out.stall;
+        if_stage_in.stall           = id_hdu_out.stall | amo_stall;
         ex_stage_in_frm_mem.rf_en   = mem_stage_in.rf_en;
         ex_stage_in_frm_mem.rd      = mem_stage_in.rd;
         ex_stage_in_frm_mem.opr_res = mem_stage_in.opr_res;
@@ -168,7 +179,7 @@ module core
         begin
             ex_stage_in  <= '0;
         end
-        else
+        else if (~mem_stage_out.amo_busy)
         begin
             ex_stage_in  <= id_stage_out;
         end

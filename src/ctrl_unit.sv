@@ -31,9 +31,10 @@ module ctrl_unit
     output csrop_t     csrop,
     output amoop_t     amoop,
     output logic       rf_en,
-    output logic       dm_en,
+    output logic       dm_wr_en,
+    output logic       dm_rd_en,
     output logic       csr_wr_en,
-    output logic       amo_wr_en,
+    output logic       is_amo,
     output logic       opr_a_sel,
     output logic       opr_b_sel,
     output logic [1:0] wb_sel
@@ -52,122 +53,134 @@ module ctrl_unit
             `OPCODE_OP:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_OPIMM:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_LOAD:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b01;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_STORE:
             begin
                 rf_en     = 1'b0;
-                dm_en     = 1'b1;
+                dm_wr_en  = 1'b1;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_BRANCH:
             begin
                 rf_en     = 1'b0;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_JAL:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_JALR:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_LUI:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_AUIPC:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_CSR:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b11;
                 csr_wr_en = 1'b1;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
             `OPCODE_AMO:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b1;
+                is_amo    = 1'b1;
             end
             default:
             begin
                 rf_en     = 1'b0;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
                 csr_wr_en = 1'b0;
-                amo_wr_en = 1'b0;
+                is_amo    = 1'b0;
             end
         endcase
     end
