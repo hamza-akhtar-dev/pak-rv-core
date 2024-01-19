@@ -12,9 +12,9 @@ keep_checking:
     amoadd.w x4, x2, (x0)
     beq x4, x5, keep_checking
 
-nop
-nop
-nop
-nop
-nop
+addi x1, x0, 1
+addi x1, x0, 2
+addi x1, x0, 3
+addi x1, x0, 4
+addi x1, x0, 5
 lw x5, 0(x0)

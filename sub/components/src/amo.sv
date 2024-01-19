@@ -188,6 +188,7 @@ module amo
     assign amo_to_rf_if.data  = dst_rf_data;
     assign amo_to_rf_if.mask  = '0;   // does not matter
 
+    // latch/hold (rs1) and rs2
     always_ff @ (posedge clk, negedge arst_n)
     begin
         if (~arst_n)
@@ -202,6 +203,7 @@ module amo
         end
     end
 
+    // latch/hold rs1 (data loader from mem from (rs1))
     always_ff @ (posedge clk, negedge arst_n)
     begin
         if (~arst_n)
@@ -210,10 +212,11 @@ module amo
         end
         else if (is_data_loaded)
         begin
-            rs1_data_ff <= rs2_data;
+            rs1_data_ff <= rs1_data;
         end
     end
 
+    // transfer data to output register
     always_ff @ (posedge clk, negedge arst_n)
     begin
         if (~arst_n)

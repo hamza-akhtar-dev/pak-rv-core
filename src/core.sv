@@ -148,7 +148,7 @@ module core
     begin
         if_stage_in.br_taken        = ex_cfu_out.br_taken;
         if_stage_in.br_target       = ex_cfu_out.br_target;
-        if_stage_in.stall           = id_hdu_out.stall | amo_stall;
+        if_stage_in.stall           = id_hdu_out.stall;
         ex_stage_in_frm_mem.rf_en   = mem_stage_in.rf_en;
         ex_stage_in_frm_mem.rd      = mem_stage_in.rd;
         ex_stage_in_frm_mem.opr_res = mem_stage_in.opr_res;
@@ -179,7 +179,7 @@ module core
         begin
             ex_stage_in  <= '0;
         end
-        else if (~mem_stage_out.amo_busy)
+        else
         begin
             ex_stage_in  <= id_stage_out;
         end

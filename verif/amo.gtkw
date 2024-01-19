@@ -1,0 +1,96 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Mon Jan 15 12:20:56 2024
+[*]
+[dumpfile] "/home/ahsan/projects/Pak-RV-Core/verif/dump.vcd"
+[dumpfile_mtime] "Mon Jan 15 12:19:39 2024"
+[dumpfile_size] 1316811
+[savefile] "/home/ahsan/projects/Pak-RV-Core/verif/amo.gtkw"
+[timestart] 14800
+[size] 1908 1047
+[pos] -1 -1
+*-14.440999 120000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.core_top.
+[treeopen] top.core_top.i_core.
+[treeopen] top.core_top.i_core.i_id_stage.
+[treeopen] top.core_top.i_core.i_mem_stage.
+[treeopen] top.core_top.i_core.i_mem_stage.i_amo.
+[sst_width] 277
+[signals_width] 252
+[sst_expanded] 1
+[sst_vpaned_height] 309
+@22
+top.core_top.i_core.i_mem_stage.i_amo.DATA_WIDTH[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.amoop[3:0]
+@28
+top.core_top.i_core.i_mem_stage.i_amo.arst_n
+top.core_top.i_core.i_mem_stage.i_amo.clk
+@200
+-
+@22
+top.core_top.i_core.i_mem_stage.i_amo.rs1_addr_ff[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.rs1_data[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.rs2_data[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.rs1_data_ff[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.rs2_data_ff[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.amo_res[31:0]
+top.core_top.i_core.i_mem_stage.i_amo.acu.res[31:0]
+@28
+top.core_top.i_core.i_mem_stage.i_amo.done_calc
+top.core_top.i_core.i_mem_stage.i_amo.start_calc
+@200
+-
+@28
+top.core_top.i_core.i_mem_stage.i_amo.mem_wr_req
+@200
+-
+@28
+top.core_top.i_core.i_mem_stage.i_amo.is_amo
+@22
+top.core_top.i_core.inst_in[31:0]
+@28
+top.core_top.i_core.i_mem_stage.i_amo.next_state[1:0]
+top.core_top.i_core.i_mem_stage.i_amo.current_state[1:0]
+top.core_top.i_core.i_mem_stage.i_amo.mem_rd_req
+top.core_top.i_core.i_mem_stage.i_amo.is_data_loaded
+top.core_top.i_core.i_mem_stage.i_amo.mem_wr_req
+top.core_top.i_core.i_mem_stage.i_amo.amo_busy
+@200
+-
+-Main Mem
+@28
+top.core_top.i_mem.clk
+top.core_top.i_mem.arst_n
+@22
+top.core_top.i_mem.addr[31:0]
+@28
+top.core_top.i_mem.write_en
+top.core_top.i_mem.read_en
+@22
+top.core_top.i_mem.data_in[31:0]
+top.core_top.i_mem.data_out[31:0]
+top.core_top.i_mem.mask[3:0]
+@200
+-
+-Register File
+@29
+top.core_top.i_core.i_mem_stage.i_amo.rf_wr_req
+@22
+top.core_top.i_core.i_id_stage.i_rf.rd_in[4:0]
+top.core_top.i_core.i_id_stage.i_rf.rd_data_in[31:0]
+@200
+-
+@22
+top.core_top.i_core.i_id_stage.i_rf.reg_file[0][31:0]
+top.core_top.i_core.i_id_stage.i_rf.reg_file[1][31:0]
+top.core_top.i_core.i_id_stage.i_rf.reg_file[2][31:0]
+top.core_top.i_core.i_id_stage.i_rf.reg_file[3][31:0]
+top.core_top.i_core.i_id_stage.i_rf.reg_file[4][31:0]
+top.core_top.i_core.i_id_stage.i_rf.reg_file[5][31:0]
+@200
+-
+@28
+top.core_top.i_core.i_id_stage.i_rf.rf_wr_valid
+[pattern_trace] 1
+[pattern_trace] 0

@@ -76,15 +76,59 @@ module id_stage
         .wb_sel      (id_stage_out.wb_sel   )
     );
 
+    logic is_amo_f;
+    logic is_amo_ff;
+    logic is_amo_fff;
+
+    always_ff @ (posedge clk, negedge arst_n)
+    begin
+        if (~arst_n)
+        begin
+            is_amo_f <= '0;
+        end
+        else
+        begin
+            is_amo_f <= id_stage_out.is_amo;
+        end
+    end
+
+    always_ff @ (posedge clk, negedge arst_n)
+    begin
+        if (~arst_n)
+        begin
+            is_amo_ff <= '0;
+        end
+        else
+        begin
+            is_amo_ff <= is_amo_f;
+        end
+    end
+
+    always_ff @ (posedge clk, negedge arst_n)
+    begin
+        if (~arst_n)
+        begin
+            is_amo_fff <= '0;
+        end
+        else
+        begin
+            is_amo_fff <= is_amo_ff;
+        end
+    end
+
+    logic stall;
+
     hdu #(
     ) i_hdu (
         .rs1           (rs1                      ),
         .rs2           (rs2                      ),
         .rd_frm_ex     (id_stage_in_frm_ex.rd    ),
         .wb_sel_frm_ex (id_stage_in_frm_ex.wb_sel),
-        .stall         (id_hdu_out.stall         ),
+        .stall         (stall                    ),
         .flush         (id_hdu_out.flush         )
     );
+
+    assign id_hdu_out.stall = stall | is_amo_f | is_amo_ff | is_amo_fff;
 
     assign id_stage_out.rd  = id_stage_in.inst[11:7];
 
