@@ -20,4 +20,5 @@ pakrv_dump.vcd
 
 #test build dir
 obj/
+verilator_sim/
 
