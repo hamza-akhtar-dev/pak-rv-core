@@ -50,6 +50,7 @@ jobs:
 
         pip3 install cocotb
         pip3 install git+https://github.com/riscv/riscof.git
+        pip3 install --upgrade riscv_isac
 
     - name: Setup RISC-V GNU toolchain
       run: |
