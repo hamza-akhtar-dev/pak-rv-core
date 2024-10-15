@@ -23,6 +23,8 @@ module core
     import ex_stage_pkg ::ex_cfu_out_t;
     import ex_stage_pkg ::ex_stage_in_frm_mem_t;
     import ex_stage_pkg ::ex_stage_in_frm_wb_t;
+
+    import if_stage_pkg ::if_stage_in_frm_ex_t;
 # (
     parameter  DATA_WIDTH    = 32,
     parameter  IMEM_SZ_IN_KB = 1,
@@ -62,8 +64,13 @@ module core
     ex_cfu_out_t          ex_cfu_out;
     ex_stage_in_frm_mem_t ex_stage_in_frm_mem;
     ex_stage_in_frm_wb_t  ex_stage_in_frm_wb;
+    if_stage_in_frm_ex_t  if_stage_in_frm_ex;
+    logic                 misprediction;
 
     logic [DATA_WIDTH-1:0] pc4;
+
+    assign if_stage_in_frm_ex.br_taken  = ex_cfu_out.br_taken;
+    assign if_stage_in_frm_ex.br_target = ex_cfu_out.br_target;
 
     // stage instantiations
     if_stage # (
@@ -72,8 +79,16 @@ module core
     ) i_if_stage (
         .clk           (clk          ),
         .arst_n        (arst_n       ),
+        .inst_in       (inst_in      ),
         .if_stage_in   (if_stage_in  ),
+        .if_stage_in_frm_ex(if_stage_in_frm_ex),
+        .misprediction ( misprediction   ),
         .if_stage_out  (/*if_stage_out*/ ),
+        .is_conditional_branch ( if_stage_out.is_conditional_branch ),
+        .is_jalr               ( if_stage_out.is_jalr               ),
+        .is_jal                ( if_stage_out.is_jal                ),
+        .predict_taken         ( if_stage_out.predict_taken         ),
+        .predict_pc            ( if_stage_out.predict_pc            ),
         .pc_out        (pc           ),
         .pc4           (pc4          )
     );
@@ -101,6 +116,7 @@ module core
         .ex_stage_in_frm_mem(ex_stage_in_frm_mem),
         .ex_stage_in_frm_wb (ex_stage_in_frm_wb ),
         .ex_stage_out       (ex_stage_out       ),
+        .misprediction      (misprediction      ),
         .ex_cfu_out         (ex_cfu_out         )
     );
 
@@ -141,6 +157,8 @@ module core
         ex_stage_in_frm_mem.rf_en   = mem_stage_in.rf_en;
         ex_stage_in_frm_mem.rd      = mem_stage_in.rd;
         ex_stage_in_frm_mem.opr_res = mem_stage_in.opr_res;
+        ex_stage_in_frm_mem.pc4     = mem_stage_in.pc4;
+        ex_stage_in_frm_mem.is_jal  = mem_stage_in.is_jal;
         ex_stage_in_frm_wb.rf_en    = wb_stage_in.rf_en;
         ex_stage_in_frm_wb.rd       = wb_stage_in.rd;
         ex_stage_in_frm_wb.wb_data  = wb_stage_out.wb_data;
@@ -151,7 +169,7 @@ module core
     // if -> id
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | ex_cfu_out.br_taken) 
+        if (~arst_n | misprediction) 
         begin
             id_stage_in  <= '0;
         end
@@ -164,7 +182,7 @@ module core
     // id -> ex
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | id_hdu_out.flush | ex_cfu_out.br_taken) 
+        if (~arst_n | id_hdu_out.flush | misprediction) 
         begin
             ex_stage_in  <= '0;
         end

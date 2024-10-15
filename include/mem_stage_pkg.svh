@@ -26,6 +26,7 @@
             logic               dm_en;
             logic               csr_wr_en;
             logic        [ 1:0] wb_sel;
+            logic               is_jal;
         } mem_stage_in_t;
 
         typedef struct packed 

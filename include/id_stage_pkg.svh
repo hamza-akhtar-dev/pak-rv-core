@@ -21,6 +21,11 @@
             logic [31:0] inst;
             logic [31:0] pc;
             logic [31:0] pc4;
+            logic        is_conditional_branch;
+            logic        is_jalr;
+            logic        is_jal;
+            logic        predict_taken;
+            logic [31:0] predict_pc;
         } id_stage_in_t;
 
         typedef struct packed
@@ -51,6 +56,13 @@
             logic        opr_a_sel;
             logic        opr_b_sel;
             logic [ 1:0] wb_sel;
+
+            // for branch predictor
+            logic        is_conditional_branch;
+            logic        is_jalr;
+            logic        is_jal;
+            logic        predict_taken;
+            logic [31:0] predict_pc;
         } id_stage_out_t;
 
         typedef struct packed
