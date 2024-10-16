@@ -1,8 +1,9 @@
 // core_top contains core's pipeline and memory
 
 module core_top # (
-    parameter DATA_WIDTH = 32,
-    parameter ADDR_WIDTH = 32
+    parameter DATA_WIDTH                = 32,
+    parameter ADDR_WIDTH                = 32,
+    parameter SUPPORT_BRANCH_PREDICTION = 1
 )(
     input logic clk,
     input logic arst_n
@@ -18,7 +19,8 @@ module core_top # (
     logic [DATA_WIDTH-1:0] instruction;
 
     core # (
-        .DATA_WIDTH           (DATA_WIDTH  )
+        .DATA_WIDTH                ( DATA_WIDTH                ),
+        .SUPPORT_BRANCH_PREDICTION ( SUPPORT_BRANCH_PREDICTION )
     ) i_core (
         .clk                  (clk         ),
         .arst_n               (arst_n      ),

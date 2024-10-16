@@ -15,6 +15,7 @@ module tb_pakrv #(
     string  instructions;
     integer time_out;
     integer signature_fp;
+    integer clk_cycles_counter_fp;
     
     core_top # (
         .DATA_WIDTH ( DATA_WIDTH )
@@ -40,6 +41,21 @@ module tb_pakrv #(
         $finish;
     end
 
+    // count number of clock cycles the program took
+    integer number_of_cycles;
+    initial
+    begin
+        number_of_cycles = 0;
+        forever
+        begin
+            if (arst_n)
+            begin
+                @(posedge clk);
+                number_of_cycles += 1;
+            end
+        end
+    end
+
     initial
     begin
         forever
@@ -55,6 +71,8 @@ module tb_pakrv #(
             // HALT condition in the case of compliance testing
             if (`MEM.write_en && `MEM.addr == 32'h8F00_0000)
             begin
+                $fwrite(clk_cycles_counter_fp, "%150s ", instructions);
+                $fwrite(clk_cycles_counter_fp, "%20d\n", number_of_cycles);
                 $finish;
             end
         end
@@ -62,12 +80,20 @@ module tb_pakrv #(
 
     initial
     begin
-        signature_fp = $fopen("DUT-pakrv.signature", "w"); // signature dumping file
+        signature_fp          = $fopen("DUT-pakrv.signature", "w"); // signature dumping file
+        clk_cycles_counter_fp = $fopen("clk_cycles.cycles", "a");
+
         if (signature_fp == 0)
         begin
-            $display("Error opening file for signature dumping");
+            $display("Error opening file DUT-pakrv.signature for signature dumping");
             $finish;
         end
+        if (clk_cycles_counter_fp == 0)
+        begin
+            $display("Error opening file clk_cycles.cycles for signature dumping");
+            $finish;
+        end
+
     end
 
     initial

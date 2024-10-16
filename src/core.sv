@@ -26,9 +26,10 @@ module core
 
     import if_stage_pkg ::if_stage_in_frm_ex_t;
 # (
-    parameter  DATA_WIDTH    = 32,
-    parameter  IMEM_SZ_IN_KB = 1,
-    parameter  DMEM_SZ_IN_KB = 1
+    parameter  DATA_WIDTH                = 32,
+    parameter  IMEM_SZ_IN_KB             = 1,
+    parameter  DMEM_SZ_IN_KB             = 1,
+    parameter  SUPPORT_BRANCH_PREDICTION = 1
 ) (
     input  logic                    clk,
     input  logic                    arst_n,
@@ -74,8 +75,9 @@ module core
 
     // stage instantiations
     if_stage # (
-        .DATA_WIDTH    (DATA_WIDTH   ),
-        .IMEM_SZ_IN_KB (IMEM_SZ_IN_KB)
+        .DATA_WIDTH                ( DATA_WIDTH                ),
+        .IMEM_SZ_IN_KB             ( IMEM_SZ_IN_KB             ),
+        .SUPPORT_BRANCH_PREDICTION ( SUPPORT_BRANCH_PREDICTION )
     ) i_if_stage (
         .clk           (clk          ),
         .arst_n        (arst_n       ),
