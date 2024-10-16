@@ -1,7 +1,7 @@
 `timescale 1 ns / 100 ps
 
 // this test-bench has inputs ports because
-// to do simulation using verilator, we need a cpp test-bench as well
+// to do simulation using verilator, we need a cpp test-bench as well just to generate clock and reset
 
 `define MEM        i_core_top.i_mem
 
@@ -15,7 +15,6 @@ module tb_pakrv #(
     string  instructions;
     integer time_out;
     integer signature_fp;
-    integer dummy_fp;
     
     core_top # (
         .DATA_WIDTH ( DATA_WIDTH )
@@ -41,11 +40,8 @@ module tb_pakrv #(
         $finish;
     end
 
-    integer count;
-
     initial
     begin
-        count = 0;
         forever
         begin
             @ (posedge clk);
@@ -54,14 +50,11 @@ module tb_pakrv #(
             if (`MEM.write_en && `MEM.addr == 32'h8E00_0000)
             begin
                 $fwrite(signature_fp, "%h\n", `MEM.data_in);
-                count += 1;
             end
 
             // HALT condition in the case of compliance testing
             if (`MEM.write_en && `MEM.addr == 32'h8F00_0000)
             begin
-                $fwrite(dummy_fp, "%0d\n", count);
-                $display("\033[33mNumber of cycles spent on the program: %0d.\033[0m", count);
                 $finish;
             end
         end
@@ -70,7 +63,6 @@ module tb_pakrv #(
     initial
     begin
         signature_fp = $fopen("DUT-pakrv.signature", "w"); // signature dumping file
-        dummy_fp     = $fopen("tempo.txt", "a");
         if (signature_fp == 0)
         begin
             $display("Error opening file for signature dumping");
