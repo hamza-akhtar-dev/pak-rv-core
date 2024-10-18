@@ -35,12 +35,12 @@ jobs:
         tar -xzf verilator.tar.gz
         tar -xzf sail_cSim.tar.gz
 
-        # Add verilator to PATH
-        # add verilator to /usr/local/share
-        # why PATH is not chosen for verilator?
+        # Move verilator directory to /usr/local/ directory and add /usr/local/verilator/bin to PATH
+        # Add the same verilator directory to /usr/local/share
+        # Why adding same directory to /usr/local/share/ after adding to PATH?
         # this is because verilator_bin uses verilator/include/verilated_std.sv
-        # if verilator/include/verilated_std.sv added in PATH, is not read by verilator_bin
-        # but easily read when put in /usr/local/share/verilator/bin/include
+        # if /usr/local/verilator/include/verilated_std.sv added in PATH, is not read by verilator_bin
+        # but easily read when put whole verilator directory also in share directory which is ultimately /usr/local/share/verilator/
         export VERILATOR_ROOT=$(pwd)/verilator
         sudo mkdir /usr/local/share/verilator
         sudo cp -r verilator/* /usr/local/share/verilator/
