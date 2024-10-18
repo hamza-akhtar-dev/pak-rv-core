@@ -24,9 +24,10 @@ module core
     import ex_stage_pkg ::ex_stage_in_frm_mem_t;
     import ex_stage_pkg ::ex_stage_in_frm_wb_t;
 # (
-    parameter  DATA_WIDTH    = 32,
-    parameter  IMEM_SZ_IN_KB = 1,
-    parameter  DMEM_SZ_IN_KB = 1
+    parameter  DATA_WIDTH                = 32,
+    parameter  IMEM_SZ_IN_KB             = 1,
+    parameter  DMEM_SZ_IN_KB             = 1,
+    parameter  SUPPORT_BRANCH_PREDICTION = 1
 ) (
     input  logic                    clk,
     input  logic                    arst_n,
@@ -62,62 +63,61 @@ module core
     ex_cfu_out_t          ex_cfu_out;
     ex_stage_in_frm_mem_t ex_stage_in_frm_mem;
     ex_stage_in_frm_wb_t  ex_stage_in_frm_wb;
+    logic                 misprediction_frm_ex;
 
     logic [DATA_WIDTH-1:0] pc4;
 
     // stage instantiations
     if_stage # (
-        .DATA_WIDTH    (DATA_WIDTH   ),
-        .IMEM_SZ_IN_KB (IMEM_SZ_IN_KB)
+        .DATA_WIDTH                ( DATA_WIDTH                         ),
+        .IMEM_SZ_IN_KB             ( IMEM_SZ_IN_KB                      ),
+        .SUPPORT_BRANCH_PREDICTION ( SUPPORT_BRANCH_PREDICTION          )
     ) i_if_stage (
-        .clk           (clk          ),
-        .arst_n        (arst_n       ),
-        .if_stage_in   (if_stage_in  ),
-        .if_stage_out  (/*if_stage_out*/ ),
-        .pc_out        (pc           ),
-        .pc4           (pc4          )
+        .clk                       ( clk                                ),
+        .arst_n                    ( arst_n                             ),
+        .if_stage_in               ( if_stage_in                        ),
+        .if_stage_out              ( if_stage_out                       )
     );
 
-    assign if_stage_out.inst = inst_in;
-    assign if_stage_out.pc   = pc;
-    assign if_stage_out.pc4  = pc4;
+    assign pc = if_stage_out.pc;
 
     id_stage #(
-        .DATA_WIDTH        (DATA_WIDTH        )
+        .DATA_WIDTH         ( DATA_WIDTH         )
     ) i_id_stage (
-        .clk               (clk               ),
-        .arst_n            (arst_n            ),
-        .wb_in             (wb_stage_out      ), // writeback interface
-        .id_stage_in       (id_stage_in       ),
-        .id_stage_in_frm_ex(id_stage_in_frm_ex),
-        .id_stage_out      (id_stage_out      ),
-        .id_hdu_out        (id_hdu_out        )
+        .clk                ( clk                ),
+        .arst_n             ( arst_n             ),
+        .wb_in              ( wb_stage_out       ), // writeback interface
+        .id_stage_in        ( id_stage_in        ),
+        .id_stage_in_frm_ex ( id_stage_in_frm_ex ),
+        .id_stage_out       ( id_stage_out       ),
+        .id_hdu_out         ( id_hdu_out         )
     );
 
     ex_stage #(
-        .DATA_WIDTH         (DATA_WIDTH         )
+        .DATA_WIDTH          ( DATA_WIDTH           )
     ) i_ex_stage (
-        .ex_stage_in        (ex_stage_in        ),
-        .ex_stage_in_frm_mem(ex_stage_in_frm_mem),
-        .ex_stage_in_frm_wb (ex_stage_in_frm_wb ),
-        .ex_stage_out       (ex_stage_out       ),
-        .ex_cfu_out         (ex_cfu_out         )
+        .ex_stage_in         ( ex_stage_in          ),
+        .ex_stage_in_frm_mem ( ex_stage_in_frm_mem  ),
+        .ex_stage_in_frm_wb  ( ex_stage_in_frm_wb   ),
+        .ex_stage_out        ( ex_stage_out         ),
+        .misprediction       ( misprediction_frm_ex ),
+        .ex_cfu_out          ( ex_cfu_out           )
     );
 
     mem_stage #(
-        .DATA_WIDTH   (DATA_WIDTH           ),
-        .DMEM_SZ_IN_KB(DMEM_SZ_IN_KB        )
+        .DATA_WIDTH    ( DATA_WIDTH           ),
+        .DMEM_SZ_IN_KB ( DMEM_SZ_IN_KB        )
     ) i_mem_stage (
-        .clk          (clk                  ),
-        .arst_n       (arst_n               ),
-        .mem_data_in  (core_in_mem_data_out ),
-        .mem_stage_in (mem_stage_in         ),
+        .clk           ( clk                  ),
+        .arst_n        ( arst_n               ),
+        .mem_data_in   ( core_in_mem_data_out ),
+        .mem_stage_in  ( mem_stage_in         ),
 
         // this input is brought here because
         // if given in mem_stage_in, then should have driven from exe_stage_out;
         // implies one cycles delay because of pipeline
         // could a better solution of it
-        .mem_stage_out(mem_stage_out        )
+        .mem_stage_out ( mem_stage_out        )
     );
 
     wb_stage #(
@@ -135,12 +135,16 @@ module core
     // combinational connections
     always_comb
     begin
+        if_stage_in.instruction     = inst_in;
         if_stage_in.br_taken        = ex_cfu_out.br_taken;
         if_stage_in.br_target       = ex_cfu_out.br_target;
+        if_stage_in.misprediction   = misprediction_frm_ex;
         if_stage_in.stall           = id_hdu_out.stall;
         ex_stage_in_frm_mem.rf_en   = mem_stage_in.rf_en;
         ex_stage_in_frm_mem.rd      = mem_stage_in.rd;
         ex_stage_in_frm_mem.opr_res = mem_stage_in.opr_res;
+        ex_stage_in_frm_mem.pc4     = mem_stage_in.pc4;
+        ex_stage_in_frm_mem.is_jal  = mem_stage_in.is_jal;
         ex_stage_in_frm_wb.rf_en    = wb_stage_in.rf_en;
         ex_stage_in_frm_wb.rd       = wb_stage_in.rd;
         ex_stage_in_frm_wb.wb_data  = wb_stage_out.wb_data;
@@ -151,7 +155,7 @@ module core
     // if -> id
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | ex_cfu_out.br_taken) 
+        if (~arst_n | misprediction_frm_ex) 
         begin
             id_stage_in  <= '0;
         end
@@ -164,7 +168,7 @@ module core
     // id -> ex
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | id_hdu_out.flush | ex_cfu_out.br_taken) 
+        if (~arst_n | id_hdu_out.flush | misprediction_frm_ex) 
         begin
             ex_stage_in  <= '0;
         end

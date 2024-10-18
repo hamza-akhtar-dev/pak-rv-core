@@ -92,4 +92,10 @@ module id_stage
     assign id_stage_out.pc  = id_stage_in.pc;
     assign id_stage_out.pc4 = id_stage_in.pc4;
 
+    assign id_stage_out.is_conditional_branch = id_stage_in.is_conditional_branch;
+    assign id_stage_out.is_jalr               = id_stage_in.is_jalr;
+    assign id_stage_out.is_jal                = id_stage_in.is_jal;
+    assign id_stage_out.predict_taken         = id_stage_in.predict_taken;
+    assign id_stage_out.predict_pc            = id_stage_in.predict_pc;
+
 endmodule
