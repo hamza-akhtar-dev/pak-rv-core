@@ -8,6 +8,7 @@
         {
             logic               br_taken;
             logic signed [31:0] br_target;
+            logic               misprediction; // active high signal, for branch prediction unit
             logic               stall;
         } if_stage_in_t;
 

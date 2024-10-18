@@ -66,7 +66,7 @@ module core
     ex_stage_in_frm_mem_t ex_stage_in_frm_mem;
     ex_stage_in_frm_wb_t  ex_stage_in_frm_wb;
     if_stage_in_frm_ex_t  if_stage_in_frm_ex;
-    logic                 misprediction;
+    logic                 misprediction_frm_ex;
 
     logic [DATA_WIDTH-1:0] pc4;
 
@@ -84,7 +84,6 @@ module core
         .inst_in       (inst_in      ),
         .if_stage_in   (if_stage_in  ),
         .if_stage_in_frm_ex(if_stage_in_frm_ex),
-        .misprediction ( misprediction   ),
         .if_stage_out  (/*if_stage_out*/ ),
         .is_conditional_branch ( if_stage_out.is_conditional_branch ),
         .is_jalr               ( if_stage_out.is_jalr               ),
@@ -118,7 +117,7 @@ module core
         .ex_stage_in_frm_mem(ex_stage_in_frm_mem),
         .ex_stage_in_frm_wb (ex_stage_in_frm_wb ),
         .ex_stage_out       (ex_stage_out       ),
-        .misprediction      (misprediction      ),
+        .misprediction      (misprediction_frm_ex),
         .ex_cfu_out         (ex_cfu_out         )
     );
 
@@ -155,6 +154,7 @@ module core
     begin
         if_stage_in.br_taken        = ex_cfu_out.br_taken;
         if_stage_in.br_target       = ex_cfu_out.br_target;
+        if_stage_in.misprediction   = misprediction_frm_ex;
         if_stage_in.stall           = id_hdu_out.stall;
         ex_stage_in_frm_mem.rf_en   = mem_stage_in.rf_en;
         ex_stage_in_frm_mem.rd      = mem_stage_in.rd;
@@ -171,7 +171,7 @@ module core
     // if -> id
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | misprediction) 
+        if (~arst_n | misprediction_frm_ex) 
         begin
             id_stage_in  <= '0;
         end
@@ -184,7 +184,7 @@ module core
     // id -> ex
     always_ff @(posedge clk or negedge arst_n) 
     begin
-        if (~arst_n | id_hdu_out.flush | misprediction) 
+        if (~arst_n | id_hdu_out.flush | misprediction_frm_ex) 
         begin
             ex_stage_in  <= '0;
         end

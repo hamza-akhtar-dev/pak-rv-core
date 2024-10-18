@@ -17,7 +17,6 @@ module if_stage
     input  logic [31:0]   inst_in,
     input  if_stage_in_t  if_stage_in,
     input  if_stage_in_frm_ex_t if_stage_in_frm_ex,
-    input  logic          misprediction,
     output if_stage_out_t if_stage_out,
     output logic          predict_taken,
     output logic          is_conditional_branch,
@@ -43,7 +42,7 @@ module if_stage
 
             always_ff @ (posedge clk, negedge arst_n)
             begin
-                if (~arst_n | misprediction)
+                if (~arst_n | if_stage_in.misprediction)
                 begin
                     predict_taken_d <= 1'b0;
                     predict_taken_dd <= 1'b0;            
@@ -58,7 +57,7 @@ module if_stage
 
             always_ff @ (posedge clk, negedge arst_n)
             begin
-                if (~arst_n | misprediction)
+                if (~arst_n | if_stage_in.misprediction)
                 begin
                     is_conditional_branch_d  <= 1'b0;
                     is_conditional_branch_dd <= 1'b0;
