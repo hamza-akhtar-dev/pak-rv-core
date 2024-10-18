@@ -6,6 +6,7 @@
 
         typedef struct packed 
         {
+            logic        [31:0] instruction;
             logic               br_taken;
             logic signed [31:0] br_target;
             logic               misprediction; // active high signal, for branch prediction unit
@@ -24,12 +25,6 @@
             logic        predict_taken;
             logic [31:0] predict_pc;
         } if_stage_out_t;
-
-        typedef struct packed 
-        {
-            logic        br_taken;
-            logic [31:0] br_target;
-        } if_stage_in_frm_ex_t;
 
     endpackage
 

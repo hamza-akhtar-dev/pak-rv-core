@@ -5,33 +5,31 @@
 module if_stage 
     import if_stage_pkg::if_stage_out_t;
     import if_stage_pkg::if_stage_in_t;
-    import if_stage_pkg::if_stage_in_frm_ex_t;
 # (
-    parameter  DATA_WIDTH    = 32,
-    parameter  IMEM_SZ_IN_KB = 1,
+    parameter  DATA_WIDTH                = 32,
+    parameter  IMEM_SZ_IN_KB             = 1,
     parameter  SUPPORT_BRANCH_PREDICTION = 1,
-    localparam PC_SIZE       = 32
+    localparam PC_SIZE                   = 32
 ) (
-    input  logic          clk,
-    input  logic          arst_n,
-    input  logic [31:0]   inst_in,
-    input  if_stage_in_t  if_stage_in,
-    input  if_stage_in_frm_ex_t if_stage_in_frm_ex,
-    output if_stage_out_t if_stage_out,
-    output logic          predict_taken,
-    output logic          is_conditional_branch,
-    output logic          is_jalr,
-    output logic          is_jal,
-    output logic [DATA_WIDTH-1:0] predict_pc,
-    output logic [DATA_WIDTH-1:0] pc_out,
-    output logic [DATA_WIDTH-1:0] pc4
+    input  logic                  clk,
+    input  logic                  arst_n,
+    input  if_stage_in_t          if_stage_in,
+    output if_stage_out_t         if_stage_out
 );
 
-    logic [   PC_SIZE-1:0] pc_in;    
-    assign pc4   = pc_out + 'd4;
+    logic                  is_conditional_branch;
+    logic [   PC_SIZE-1:0] pc_out;  
+    logic [   PC_SIZE-1:0] pc4;  
+    logic                  is_jalr;
+    logic                  is_jal;
+    logic                  predict_taken;
+    logic [DATA_WIDTH-1:0] predict_pc;
 
+    logic [   PC_SIZE-1:0] pc_in;  
     logic [DATA_WIDTH-1:0] pc_coditional_branch;
     logic                  is_jalr_d, is_jalr_dd;
+
+    assign pc4   = pc_out + 'd4;
 
     generate
         if (SUPPORT_BRANCH_PREDICTION == 1)
@@ -77,10 +75,10 @@ module if_stage
             begin
                 if (is_conditional_branch_dd | is_jalr_dd)
                 begin
-                    if      ( if_stage_in_frm_ex.br_taken)                                        pc_in = if_stage_in.br_target;
-                    else if (!if_stage_in_frm_ex.br_taken &&  predict_taken_dd)                   pc_in = pc_coditional_branch + 32'd4;
-                    else if (!if_stage_in_frm_ex.br_taken && !predict_taken_dd && !predict_taken) pc_in = pc4; // ~ predict taken handles hazards of conditional branch followed by conditional or unconditional branches
-                    else                                                                          pc_in = predict_pc;
+                    if      ( if_stage_in.br_taken)                                        pc_in = if_stage_in.br_target;
+                    else if (!if_stage_in.br_taken &&  predict_taken_dd)                   pc_in = pc_coditional_branch + 32'd4;
+                    else if (!if_stage_in.br_taken && !predict_taken_dd && !predict_taken) pc_in = pc4; // ~ predict taken handles hazards of conditional branch followed by conditional or unconditional branches
+                    else                                                                   pc_in = predict_pc;
                 end
                 else if (predict_taken)
                 begin
@@ -123,9 +121,9 @@ module if_stage
                 .clk                   ( clk                          ),
                 .arst_n                ( arst_n                       ),
                 .pc                    ( pc_out                       ),
-                .inst_in               ( inst_in                      ),
-                .br_taken              ( if_stage_in_frm_ex.br_taken  ),
-                .br_target             ( if_stage_in_frm_ex.br_target ),
+                .inst_in               ( if_stage_in.instruction      ),
+                .br_taken              ( if_stage_in.br_taken         ),
+                .br_target             ( if_stage_in.br_target        ),
                 .predict_taken         ( predict_taken                ),
                 .is_conditional_branch ( is_conditional_branch        ),
                 .is_jalr               ( is_jalr                      ),
@@ -135,4 +133,15 @@ module if_stage
             );
         end
     endgenerate
+
+    // driving signals for next stage
+    assign if_stage_out.inst                  = if_stage_in.instruction;
+    assign if_stage_out.pc                    = pc_out;
+    assign if_stage_out.pc4                   = pc4;
+    assign if_stage_out.is_conditional_branch = is_conditional_branch;
+    assign if_stage_out.is_jalr               = is_jalr;
+    assign if_stage_out.is_jal                = is_jal;
+    assign if_stage_out.predict_taken         = predict_taken;
+    assign if_stage_out.predict_pc            = predict_pc;
+
 endmodule
