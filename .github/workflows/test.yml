@@ -76,4 +76,10 @@ jobs:
         cd verif/riscof_compliance
         echo "Everything is set, Running Compliance Verification Framework"        
         chmod +x ./run-compliance.sh
-        ./run-compliance.sh
+        ./run-compliance.sh 2>&1 | tee compliance.log
+
+    - name: Upload Compliance Log
+      uses: actions/upload-artifact@v3
+      with:
+        name: compliance-log
+        path: Pak-RV-Core/verif/riscof_compliance/compliance.log
