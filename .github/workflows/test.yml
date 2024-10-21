@@ -65,7 +65,7 @@ jobs:
       run: |
         cd Pak-RV-Core
         git submodule update --init --recursive
-        tree Pak-RV-Core     
+        tree     
         cd verif/riscof_compliance
         chmod +x ./run-compliance.sh
         ./run-compliance.sh
