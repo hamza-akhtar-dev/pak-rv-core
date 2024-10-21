@@ -74,6 +74,6 @@ jobs:
         cd Pak-RV-Core
         git submodule update --init --recursive        
         cd verif/riscof_compliance
-        tree ; $PWD
+        echo "Everything is set, Running Compliance Verification Framework"        
         chmod +x ./run-compliance.sh
         ./run-compliance.sh
