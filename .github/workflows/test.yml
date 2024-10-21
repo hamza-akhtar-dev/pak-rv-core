@@ -17,6 +17,7 @@ jobs:
       uses: actions/cache@v3
       id: pakrv-cache   # name of the cache
       with:             # what to cache: the folder(s)
+        submodules: true
         path: |
           ~/Pak-RV-Core/verif/                                  # path to the folder(s)
           ~/Pak-RV-Core/verif/riscof_compliance                 # path to the folder(s)
