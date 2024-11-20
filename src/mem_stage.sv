@@ -6,10 +6,8 @@ module mem_stage
     import mem_stage_pkg::mem_stage_in_t;
     import mem_stage_pkg::mem_stage_out_t;
 # (
-    parameter DATA_WIDTH    = 32,
-    parameter DMEM_SZ_IN_KB = 1,
-    parameter NUM_CS_REGISTERS = `NUM_CS_REGISTERS,
-    localparam MASK_SIZE    = DATA_WIDTH/8
+    parameter DATA_WIDTH       = 32,
+    parameter NUM_CS_REGISTERS = `NUM_CS_REGISTERS
 ) (
     input  logic                    clk,
     input  logic                    arst_n,
@@ -18,53 +16,33 @@ module mem_stage
     output mem_stage_out_t          mem_stage_out
 );
 
-    logic [DATA_WIDTH-1:0] dmem_addr_in;
-    logic [DATA_WIDTH-1:0] dmem_data_in;
-    logic [DATA_WIDTH-1:0] dmem_rdata;
-
-    logic [DATA_WIDTH-1:0]   lsu_data_out;
-    logic [DATA_WIDTH/8-1:0] mask;
-
-    dmem # (
-        .DATA_WIDTH    (DATA_WIDTH        ),
-        .DMEM_SZ_IN_KB (DMEM_SZ_IN_KB     )
-    )  i_dmem (
-        .clk           (clk               ),
-        .arst_n        (arst_n            ),
-        .write_en      (mem_stage_in.dm_en),
-        .mask          (mask              ),
-        .addr          (dmem_addr_in      ),  // TODO: make this parameterizable
-        .data_in       (dmem_data_in      ),
-        .data_out      (dmem_rdata        )
-    );
-
     lsu # (
-        .DATA_WIDTH (DATA_WIDTH                        )
+        .DATA_WIDTH ( DATA_WIDTH                         )
     ) i_lsu (
-        .lsuop      (mem_stage_in.lsuop                ),
-        .addr_in    (mem_stage_in.opr_res              ),
-        .addr_out   (mem_stage_out.core_out_mem_addr_in),
-        .data_s_in  (mem_stage_in.opr_b                ),
-        .data_s_out (mem_stage_out.core_out_mem_data_in),
-        .data_l_in  (mem_data_in                       ),
-        .data_l_out (mem_stage_out.lsu_rdata           ),
-        .mask       (mem_stage_out.mask                )
+        .lsuop      ( mem_stage_in.lsuop                 ),
+        .addr_in    ( mem_stage_in.opr_res               ),
+        .addr_out   ( mem_stage_out.core_out_mem_addr_in ),
+        .data_s_in  ( mem_stage_in.opr_b                 ),
+        .data_s_out ( mem_stage_out.core_out_mem_data_in ),
+        .data_l_in  ( mem_data_in                        ),
+        .data_l_out ( mem_stage_out.lsu_rdata            ),
+        .mask       ( mem_stage_out.mask                 )
     );
 
     csr # (
-        .DATA_WIDTH (DATA_WIDTH),
-        .NUM_REGISTERS(NUM_CS_REGISTERS)
+        .DATA_WIDTH    ( DATA_WIDTH              ),
+        .NUM_REGISTERS ( NUM_CS_REGISTERS        )
     ) i_csr (
-        .clk(clk),
-        .arst_n(arst_n),
+        .clk           ( clk                     ),
+        .arst_n        ( arst_n                  ),
 
-        .csrop(mem_stage_in.csrop),
-        .rs1_data(mem_stage_in.opr_a),
-        .zimm(mem_stage_in.zimm),
+        .csrop         ( mem_stage_in.csrop      ),
+        .rs1_data      ( mem_stage_in.opr_a      ),
+        .zimm          ( mem_stage_in.zimm       ),
 
-        .addr_in(mem_stage_in.imm[11:0]),
-        .wr_en_in(mem_stage_in.csr_wr_en),
-        .rd_data_out(mem_stage_out.csr_rdata)
+        .addr_in       ( mem_stage_in.imm[11:0]  ),
+        .wr_en_in      ( mem_stage_in.csr_wr_en  ),
+        .rd_data_out   ( mem_stage_out.csr_rdata )
     );
 
     assign mem_stage_out.opr_res   = mem_stage_in.opr_res;

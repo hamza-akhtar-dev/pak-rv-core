@@ -105,8 +105,7 @@ module core
     );
 
     mem_stage #(
-        .DATA_WIDTH    ( DATA_WIDTH           ),
-        .DMEM_SZ_IN_KB ( DMEM_SZ_IN_KB        )
+        .DATA_WIDTH    ( DATA_WIDTH           )
     ) i_mem_stage (
         .clk           ( clk                  ),
         .arst_n        ( arst_n               ),
