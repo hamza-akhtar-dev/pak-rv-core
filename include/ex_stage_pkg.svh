@@ -29,7 +29,8 @@
             lsuop_t      lsuop;
             csrop_t      csrop;
             logic        rf_en;
-            logic        dm_en;
+            logic        dm_wr_en;
+            logic        dm_rd_en;
             logic        csr_wr_en;
             logic        opr_a_sel;
             logic        opr_b_sel;
@@ -72,7 +73,8 @@
             lsuop_t             lsuop;
             csrop_t             csrop;
             logic               rf_en;
-            logic               dm_en;
+            logic               dm_wr_en;
+            logic               dm_rd_en;
             logic               csr_wr_en;
             logic        [ 1:0] wb_sel;
             logic               is_jal;

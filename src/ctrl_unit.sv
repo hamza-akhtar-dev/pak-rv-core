@@ -26,7 +26,8 @@ module ctrl_unit
     output cfuop_t     cfuop,
     output csrop_t     csrop,
     output logic       rf_en,
-    output logic       dm_en,
+    output logic       dm_wr_en,
+    output logic       dm_rd_en,
     output logic       csr_wr_en,
     output logic       opr_a_sel,
     output logic       opr_b_sel,
@@ -45,7 +46,8 @@ module ctrl_unit
             `OPCODE_OP:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;
@@ -54,7 +56,8 @@ module ctrl_unit
             `OPCODE_OPIMM:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
@@ -63,7 +66,8 @@ module ctrl_unit
             `OPCODE_LOAD:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b1;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b01;
@@ -72,7 +76,8 @@ module ctrl_unit
             `OPCODE_STORE:
             begin
                 rf_en     = 1'b0;
-                dm_en     = 1'b1;
+                dm_wr_en  = 1'b1;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
@@ -81,7 +86,8 @@ module ctrl_unit
             `OPCODE_BRANCH:
             begin
                 rf_en     = 1'b0;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
@@ -90,7 +96,8 @@ module ctrl_unit
             `OPCODE_JAL:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
@@ -99,7 +106,8 @@ module ctrl_unit
             `OPCODE_JALR:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b10;
@@ -108,7 +116,8 @@ module ctrl_unit
             `OPCODE_LUI:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
@@ -117,7 +126,8 @@ module ctrl_unit
             `OPCODE_AUIPC:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b1;
                 wb_sel    = 2'b00;
@@ -126,7 +136,8 @@ module ctrl_unit
             `OPCODE_CSR:
             begin
                 rf_en     = 1'b1;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b1;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b11;
@@ -135,7 +146,8 @@ module ctrl_unit
             default:
             begin
                 rf_en     = 1'b0;
-                dm_en     = 1'b0;
+                dm_wr_en  = 1'b0;
+                dm_rd_en  = 1'b0;
                 opr_a_sel = 1'b0;
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b00;

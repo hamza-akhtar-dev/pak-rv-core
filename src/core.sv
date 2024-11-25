@@ -23,6 +23,11 @@ module core
     import ex_stage_pkg ::ex_cfu_out_t;
     import ex_stage_pkg ::ex_stage_in_frm_mem_t;
     import ex_stage_pkg ::ex_stage_in_frm_wb_t;
+
+    import lsu_pkg      ::core_to_lsu_s;
+    import lsu_pkg      ::lsu_to_core_s;
+    import lsu_pkg      ::mem_to_lsu_s;
+    import lsu_pkg      ::lsu_to_mem_s;
 # (
     parameter  DATA_WIDTH                = 32,
     parameter  IMEM_SZ_IN_KB             = 1,
@@ -31,15 +36,14 @@ module core
 ) (
     input  logic                    clk,
     input  logic                    arst_n,
+
+    // intruction memory interface
     output logic [DATA_WIDTH-1:0]   pc,
     input  logic [DATA_WIDTH-1:0]   inst_in,
 
-    // data memory related ports to/from shared memory
-    input  logic [DATA_WIDTH-1:0]   core_in_mem_data_out,
-    output logic [DATA_WIDTH-1:0]   core_out_mem_addr_in,
-    output logic [DATA_WIDTH-1:0]   core_out_mem_data_in,
-    output logic                    core_out_mem_we_in,
-    output logic [DATA_WIDTH/8-1:0] core_out_mem_mask_in
+    // data memory interface
+    input  mem_to_lsu_s             mem_to_lsu,
+    output lsu_to_mem_s             lsu_to_mem
 );
     // stage signals
     if_stage_in_t  if_stage_in;
@@ -57,6 +61,9 @@ module core
     wb_stage_in_t  wb_stage_in;
     wb_stage_out_t wb_stage_out;
 
+    core_to_lsu_s core_to_lsu;
+    lsu_to_core_s lsu_to_core;
+
     // combinational connection signals
     id_stage_in_frm_ex_t  id_stage_in_frm_ex;
     id_hdu_out_t          id_hdu_out;
@@ -65,18 +72,16 @@ module core
     ex_stage_in_frm_wb_t  ex_stage_in_frm_wb;
     logic                 misprediction_frm_ex;
 
-    logic [DATA_WIDTH-1:0] pc4;
-
     // stage instantiations
     if_stage # (
-        .DATA_WIDTH                ( DATA_WIDTH                         ),
-        .IMEM_SZ_IN_KB             ( IMEM_SZ_IN_KB                      ),
-        .SUPPORT_BRANCH_PREDICTION ( SUPPORT_BRANCH_PREDICTION          )
+        .DATA_WIDTH                ( DATA_WIDTH                ),
+        .IMEM_SZ_IN_KB             ( IMEM_SZ_IN_KB             ),
+        .SUPPORT_BRANCH_PREDICTION ( SUPPORT_BRANCH_PREDICTION )
     ) i_if_stage (
-        .clk                       ( clk                                ),
-        .arst_n                    ( arst_n                             ),
-        .if_stage_in               ( if_stage_in                        ),
-        .if_stage_out              ( if_stage_out                       )
+        .clk                       ( clk                       ),
+        .arst_n                    ( arst_n                    ),
+        .if_stage_in               ( if_stage_in               ),
+        .if_stage_out              ( if_stage_out              )
     );
 
     assign pc = if_stage_out.pc;
@@ -109,14 +114,19 @@ module core
     ) i_mem_stage (
         .clk           ( clk                  ),
         .arst_n        ( arst_n               ),
-        .mem_data_in   ( core_in_mem_data_out ),
+        .lsu_to_core   ( lsu_to_core          ),
         .mem_stage_in  ( mem_stage_in         ),
-
-        // this input is brought here because
-        // if given in mem_stage_in, then should have driven from exe_stage_out;
-        // implies one cycles delay because of pipeline
-        // could a better solution of it
         .mem_stage_out ( mem_stage_out        )
+    );
+
+    lsu # (
+        .DATA_WIDTH    ( DATA_WIDTH  )
+    ) i_lsu (
+        .core_to_lsu_i ( core_to_lsu ),
+        .lsu_to_core_o ( lsu_to_core ),
+
+        .mem_to_lsu_i  ( mem_to_lsu  ),
+        .lsu_to_mem_o  ( lsu_to_mem  )
     );
 
     wb_stage #(
@@ -125,11 +135,15 @@ module core
         .wb_stage_out (wb_stage_out )
     );
 
-    // ports going to shared memory
-    assign core_out_mem_addr_in = mem_stage_out.core_out_mem_addr_in;
-    assign core_out_mem_data_in = mem_stage_out.core_out_mem_data_in;
-    assign core_out_mem_we_in   = mem_stage_in.dm_en;
-    assign core_out_mem_mask_in = mem_stage_out.mask;
+    // core to lsu combinational connections
+    always_comb
+    begin
+        assign core_to_lsu.write_en = mem_stage_in.dm_wr_en;
+        assign core_to_lsu.read_en  = mem_stage_in.dm_rd_en;
+        assign core_to_lsu.lsuop    = mem_stage_in.lsuop;
+        assign core_to_lsu.addr     = mem_stage_in.opr_res;
+        assign core_to_lsu.data     = mem_stage_in.opr_b;
+    end
 
     // combinational connections
     always_comb

@@ -127,7 +127,8 @@ module ex_stage
     assign ex_stage_out.rd      = ex_stage_in.rd;
     assign ex_stage_out.pc4     = ex_stage_in.pc4;
     assign ex_stage_out.rf_en   = ex_stage_in.rf_en;
-    assign ex_stage_out.dm_en   = ex_stage_in.dm_en;
+    assign ex_stage_out.dm_wr_en= ex_stage_in.dm_wr_en;
+    assign ex_stage_out.dm_rd_en= ex_stage_in.dm_rd_en;
     assign ex_stage_out.csr_wr_en = ex_stage_in.csr_wr_en;
     assign ex_stage_out.wb_sel  = ex_stage_in.wb_sel;
     assign ex_stage_out.lsuop   = ex_stage_in.lsuop;

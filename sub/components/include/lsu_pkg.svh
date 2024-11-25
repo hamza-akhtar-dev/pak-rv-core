@@ -51,6 +51,34 @@
 
         endfunction
 
+        typedef struct packed {
+            logic        write_en;
+            logic        read_en;
+            lsuop_t      lsuop;
+            logic [31:0] addr;
+            logic [31:0] data;      // valid in case of store operation
+        } core_to_lsu_s;
+
+        typedef struct packed {
+            logic [31:0] addr;
+            logic [31:0] data;
+            logic        write_en;
+        } lsu_to_core_s;
+
+        typedef struct packed {
+            logic        w_success;   // data write success
+            logic        r_success;   // data read success
+            logic [31:0] data;
+        } mem_to_lsu_s;
+
+        typedef struct packed {
+            logic        write_en;
+            logic        read_en;
+            logic [31:0] addr;
+            logic [31:0] data;
+            logic [ 3:0] strb;
+        } lsu_to_mem_s;
+
     endpackage
 
 `endif
