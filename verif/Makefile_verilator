@@ -1,6 +1,7 @@
 
 BUILD_DIR = verilator_sim/
 TOPLEVEL = tb_pakrv
+TIME_OUT = 500000
 
 compile:
 	@verilator --Mdir $(BUILD_DIR) -cc ../src/*.sv ../sub/components/src/*.sv src/tb_pakrv.sv -I../include -I../sub/components/include --top-module $(TOPLEVEL) --exe src/tb_pakrv.cpp --trace --trace-structs --timing -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND -Wno-TIMESCALEMOD
@@ -9,7 +10,7 @@ make_executable:
 	@make -C $(BUILD_DIR) -f V$(TOPLEVEL).mk
 
 simulate:
-	@./$(BUILD_DIR)/./V$(TOPLEVEL)
+	@./$(BUILD_DIR)/./V$(TOPLEVEL) +time_out=$(TIME_OUT)
 
 all: compile make_executable simulate
 

@@ -4,6 +4,7 @@
 // to do simulation using verilator, we need a cpp test-bench as well just to generate clock and reset
 
 `define MEM        i_core_top.i_mem
+`define RF         i_core_top.i_core.i_id_stage.i_rf
 
 module tb_pakrv #(
     localparam DATA_WIDTH = 32
@@ -38,6 +39,7 @@ module tb_pakrv #(
         begin
             @(posedge clk);
         end
+        $display("\n\nTimeout has occured!\n\n");
         $finish;
     end
 

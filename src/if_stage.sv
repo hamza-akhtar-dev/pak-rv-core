@@ -75,18 +75,26 @@ module if_stage
             begin
                 if (is_conditional_branch_dd | is_jalr_dd)
                 begin
-                    if      ( if_stage_in.br_taken)                                        pc_in = if_stage_in.br_target;
-                    else if (!if_stage_in.br_taken &&  predict_taken_dd)                   pc_in = pc_coditional_branch + 32'd4;
-                    else if (!if_stage_in.br_taken && !predict_taken_dd && !predict_taken) pc_in = pc4; // ~ predict taken handles hazards of conditional branch followed by conditional or unconditional branches
-                    else                                                                   pc_in = predict_pc;
+                    if (is_jalr_dd)
+                    begin
+                        pc_in = if_stage_in.br_target;
+                    end
+                    else
+                    begin
+                        if ( if_stage_in.br_taken &&  predict_taken_dd)
+                        begin
+                            if (if_stage_in.misprediction) pc_in = if_stage_in.br_target;  // despite having predict_taken, predict pc can be wrong, so deal with misprediction over here
+                            else                           pc_in = pc4;
+                        end
+                        else if ( if_stage_in.br_taken && !predict_taken_dd)                   pc_in = if_stage_in.br_target;
+                        else if (!if_stage_in.br_taken &&  predict_taken_dd)                   pc_in = pc_coditional_branch + 32'd4;
+                        else if (!if_stage_in.br_taken && !predict_taken_dd && !predict_taken) pc_in = pc4; // ~ predict taken handles hazards of conditional branch followed by conditional or unconditional branches
+                        else                                                                   pc_in = predict_pc;
+                    end
                 end
                 else if (predict_taken)
                 begin
                     pc_in = predict_pc;
-                end
-                else if (is_jalr_dd)
-                begin
-                    pc_in = if_stage_in.br_target;
                 end
                 else
                 begin
