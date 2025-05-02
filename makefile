@@ -15,6 +15,7 @@ build:
 	@echo Compiling Test : "$(TESTS_DIR)/$(TEST)"
 	@cd $(TESTS_DIR)/$(TEST); make all;
 	@echo Copying the test.mem file in : $(TESTBUILD_DIR)
+	@mkdir -p $(TESTBUILD_DIR)
 	@cp $(TESTS_DIR)/$(TEST)/test.mem $(TESTBUILD_DIR)
 
 compile_and_simulate:
