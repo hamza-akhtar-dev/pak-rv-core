@@ -6,25 +6,30 @@
 `include "lsu_pkg.svh"
 `include "cfu_pkg.svh"
 `include "csr_pkg.svh"
+`include "amo_pkg.svh"
 
 module ctrl_unit 
     import alu_pkg::aluop_t;
     import cfu_pkg::cfuop_t;
     import lsu_pkg::lsuop_t;
     import csr_pkg::csrop_t;
+    import amo_pkg::amoop_t;
     import alu_pkg::gen_aluop_f;
     import cfu_pkg::gen_cfuop_f;
     import lsu_pkg::gen_lsuop_f;
     import csr_pkg::gen_csrop_f;
+    import amo_pkg::gen_amoop_f;
 #(
 ) (
     input  logic [6:0] opcode,
     input  logic [6:0] funct7,
+    input  logic [4:0] funct5,
     input  logic [2:0] funct3,
     output aluop_t     aluop,
     output lsuop_t     lsuop,
     output cfuop_t     cfuop,
     output csrop_t     csrop,
+    output amoop_t     amoop,
     output logic       rf_en,
     output logic       dm_en,
     output logic       csr_wr_en,
@@ -37,6 +42,7 @@ module ctrl_unit
     assign lsuop = gen_lsuop_f(opcode, funct3);
     assign cfuop = gen_cfuop_f(opcode, funct3);
     assign csrop = gen_csrop_f(opcode, funct3);
+    assign amoop = gen_amoop_f(funct5);
 
     // control signals
     always_comb
@@ -131,6 +137,15 @@ module ctrl_unit
                 opr_b_sel = 1'b0;
                 wb_sel    = 2'b11;
                 csr_wr_en = 1'b1;
+            end
+            `OPCODE_AMO:
+            begin
+                rf_en     = 1'b1;
+                dm_en     = 1'b1;
+                opr_a_sel = 1'b0;
+                opr_b_sel = 1'b0;
+                wb_sel    = 2'b00;
+                csr_wr_en = 1'b0;
             end
             default:
             begin

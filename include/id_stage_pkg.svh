@@ -8,11 +8,13 @@
     `include "cfu_pkg.svh"
     `include "lsu_pkg.svh"
     `include "csr_pkg.svh"
+    `include "amo_pkg.svh"
 
     import alu_pkg::aluop_t;
     import cfu_pkg::cfuop_t;
     import lsu_pkg::lsuop_t;
     import csr_pkg::csrop_t;
+    import amo_pkg::amoop_t;
 
     package id_stage_pkg;
 
@@ -50,6 +52,7 @@
             cfuop_t      cfuop;
             lsuop_t      lsuop;
             csrop_t      csrop;
+            amoop_t      amoop;
             logic        rf_en;
             logic        dm_en;
             logic        csr_wr_en;

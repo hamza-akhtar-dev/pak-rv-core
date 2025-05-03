@@ -5,12 +5,14 @@
     `include "alu_pkg.svh"
     `include "cfu_pkg.svh"
     `include "lsu_pkg.svh"
+    `include "amo_pkg.svh"
 
     package ex_stage_pkg;
 
         import alu_pkg::aluop_t;
         import cfu_pkg::cfuop_t;
         import lsu_pkg::lsuop_t;
+        import amo_pkg::amoop_t;
 
         typedef struct packed
         {
@@ -28,6 +30,7 @@
             cfuop_t      cfuop;
             lsuop_t      lsuop;
             csrop_t      csrop;
+            amoop_t      amoop;
             logic        rf_en;
             logic        dm_en;
             logic        csr_wr_en;
